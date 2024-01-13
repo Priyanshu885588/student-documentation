@@ -1,22 +1,15 @@
 import "./App.css";
-
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import { AdminPage } from "./Components/Admin/AdminPage";
+import { HomePage } from "./Components/Home/HomePage";
 function App() {
   return (
-    <>
-      <iframe
-        src="https://giphy.com/embed/I8s0tldV0AaR0nnT9i"
-        width="480"
-        height="270"
-        frameBorder="0"
-        class="giphy-embed"
-        allowFullScreen
-      ></iframe>
-      <p>
-        <a href="https://giphy.com/gifs/get-er-done-git-r-I8s0tldV0AaR0nnT9i">
-          "lets fucking do this "
-        </a>
-      </p>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/admin/*" element={<AdminPage />} />
+      </Routes>
+    </Router>
   );
 }
 

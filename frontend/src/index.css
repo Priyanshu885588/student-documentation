@@ -1,3 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Merriweather&family=Montserrat&family=Nunito&family=Open+Sans&family=Playfair+Display&family=Quicksand&family=Roboto&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.roboto {
+  font-family: "Roboto", sans-serif;
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+}
+
+.lato {
+  font-family: "Lato", sans-serif;
+}
+
+.merriweather {
+  font-family: "Merriweather", serif;
+}
+
+.nunito {
+  font-family: "Nunito", sans-serif;
+}
+
+.open-sans {
+  font-family: "Open Sans", sans-serif;
+}
+
+.playfair {
+  font-family: "Playfair Display", serif;
+}
+.quicksand {
+  font-family: "Quicksand", sans-serif;
+}
