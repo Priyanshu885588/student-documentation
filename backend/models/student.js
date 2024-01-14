@@ -5,7 +5,8 @@ const createStudentTable = (batch) => {
   const query = `CREATE TABLE IF NOT EXISTS ${tableName} (
       id INT AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
-      admission_category VARCHAR(255) NOT NULL
+      admission_category VARCHAR(255) NOT NULL,
+      status BIT(1) DEFAULT 0
     )`;
 
   db.query(query, (err, results) => {
