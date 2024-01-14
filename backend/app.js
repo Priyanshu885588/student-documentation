@@ -1,8 +1,10 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
 const uploadRoutes = require("./routes/uploadRoutes");
 const studentRoutes = require("./routes/studentRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -10,6 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/admin", studentRoutes);
 app.use("/api/v1/admin/upload", uploadRoutes);
+app.use("/api/v1/admin/",adminRoutes)
 
 app.get("/", (req, res) => {
   console.log("Reached the root route");
