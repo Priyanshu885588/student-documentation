@@ -1,8 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Merriweather&family=Montserrat&family=Nunito&family=Open+Sans&family=Playfair+Display&family=Quicksand&family=Roboto&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Source+Code+Pro&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+.mono {
+  font-family: "Roboto Mono", monospace;
+}
 .roboto {
   font-family: "Roboto", sans-serif;
 }

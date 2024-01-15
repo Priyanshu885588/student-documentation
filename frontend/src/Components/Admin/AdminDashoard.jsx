@@ -10,12 +10,14 @@ import { GrGroup } from "react-icons/gr";
 export const AdminDashboard = () => {
   const [batch, setBatch] = useState("");
   const [isError, setIsError] = useState(false);
+  const [loading, setIsLoading] = useState(true);
   const [studentData, setStudentData] = useState([]);
   const [studentCount, setStudentCount] = useState({});
   const [batches, setIsbatches] = useState();
 
   const fetchData = async (batchData) => {
     try {
+      setIsLoading(true);
       const data = await fetchStudentData({ batch: batchData });
       setStudentData(data);
       const totalStudents = data.length;
@@ -30,6 +32,8 @@ export const AdminDashboard = () => {
     } catch (error) {
       console.error("Error in AdminDashboard", error);
       setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleBatchChange = (e) => {
@@ -41,6 +45,7 @@ export const AdminDashboard = () => {
   useEffect(() => {
     const fetchBatches = async () => {
       try {
+        setIsLoading(true);
         const batchesData = await fetchStudentBatches();
         setIsbatches(batchesData);
         // Assuming you want to initially fetch data for the first batch in the list
@@ -49,15 +54,26 @@ export const AdminDashboard = () => {
           fetchData(batchesData.batches[0]);
         } else {
           setIsbatches(null);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error fetching batches:", error);
         setIsError(true);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchBatches();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-r from-gray-300 to-gray-100">
@@ -118,20 +134,22 @@ export const AdminDashboard = () => {
                 </p>
               </div>
             </div>
-            <div className="bg-white h-full w-1/4 rounded-xl gap-5 shadow-lg flex justify-center items-center">
-              <div className="p-3 bg-red-100 rounded-full shadow-sm shadow-red-900">
-                <GrGroup color="red" size="2.5rem" />
+            <div className="bg-white h-full w-1/4 rounded-xl gap-4 shadow-lg flex justify-center items-center">
+              <div className="w-1/2 flex justify-end">
+                <div className="p-3 bg-red-100 rounded-full w-fit shadow-sm shadow-red-900">
+                  <GrGroup color="red" size="2.5rem" />
+                </div>
               </div>
-              <div>
+              <div className="w-1/2 overflow-hidden">
                 <select
                   onChange={handleBatchChange}
                   value={batch}
-                  className="focus:outline-none cursor-pointer"
+                  className="focus:outline-none cursor-pointer uppercase w-fit"
                 >
                   {batches &&
                     batches.batches.map((batch) => (
                       <option
-                        className="cursor-pointer text-center"
+                        className="cursor-pointer uppercase"
                         key={batch}
                         value={batch}
                       >
@@ -139,9 +157,6 @@ export const AdminDashboard = () => {
                       </option>
                     ))}
                 </select>
-                <p className="text-xs nunito opacity-75 text-gray-500">
-                  Current batch
-                </p>
               </div>
             </div>
           </div>
@@ -150,11 +165,12 @@ export const AdminDashboard = () => {
               <div className="w-full h-60 flex justify-center items-center">
                 <p className="text-red-500">Error fetching data.</p>
               </div>
-            ) : studentData.length > 0 ? (
+            ) : (
               <div className="w-full flex justify-center rounded-lg shadow-md roboto">
                 <table className="w-full bg-white rounded-xl">
                   <thead>
-                    <tr className="text-center border-b-2 border-gray-30">
+                    <tr className="text-center border-b-2 border-gray-30 uppercase">
+                      <th className="py-4 px-4">S_No</th>
                       <th className="py-4 px-4">ID</th>
                       <th className="py-4 px-4">Name</th>
                       <th className="py-4 px-4">Admission Category</th>
@@ -162,12 +178,13 @@ export const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {studentData.map((student) => (
+                    {studentData.map((student, index) => (
                       <tr
                         key={student.id}
                         className="text-center border-b border-gray-30"
                       >
-                        <td className="py-2 px-4">{student.id}</td>
+                        <td className="py-2 px-4">{index + 1}</td>
+                        <td className="py-2 px-4 mono">{student.id}</td>
                         <td className="py-2 px-4">{student.name}</td>
                         <td className="py-2 px-4">
                           {student.admission_category}
@@ -193,10 +210,6 @@ export const AdminDashboard = () => {
                     ))}
                   </tbody>
                 </table>
-              </div>
-            ) : (
-              <div className="w-full h-60 flex justify-center items-center">
-                <Loading />
               </div>
             )}
           </div>
