@@ -20,4 +20,5 @@ const authenticationMiddleware = async (req, res, next) => {
   }
 }
 
+
 module.exports = authenticationMiddleware
