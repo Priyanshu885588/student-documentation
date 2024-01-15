@@ -11,7 +11,7 @@ export const VerticalNavbar = () => {
     <div>
       <div className="">
         <button
-          className="hover:bg-amber-500 py-2 px-2 absolute top-0"
+          className="bg-white hover:bg-amber-200 rounded-br-2xl py-2 px-2 absolute top-0 transition-all duration-300"
           type="button"
           onClick={toggleDrawer}
         >
@@ -50,7 +50,7 @@ export const VerticalNavbar = () => {
         id="drawer-navigation"
         className={`fixed top-0 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform ${
           isDrawerOpen ? "translate-x-0" : "-translate-x-full"
-        } bg-white dark:bg-gray-800`}
+        } bg-gray-800`}
         tabIndex="-1"
       >
         <h5
@@ -84,7 +84,7 @@ export const VerticalNavbar = () => {
             <li>
               <Link
                 to="/admin/dashboard"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group"
                 onClick={toggleDrawer}
               >
                 <svg
@@ -103,7 +103,7 @@ export const VerticalNavbar = () => {
             <li>
               <Link
                 to="/admin/upload"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group"
                 onClick={toggleDrawer}
               >
                 <svg

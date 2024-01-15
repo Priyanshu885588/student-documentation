@@ -23,8 +23,8 @@ const uploadExcel = (req, res) => {
     // Iterate through rows starting from the second row
     for (let i = 2; i <= worksheet.rowCount; i++) {
       const row = worksheet.getRow(i);
-      const name = row.getCell("B").value.trim(); // Assuming name is in column B
-      const admissionCategory = row.getCell("C").value.trim(); // Assuming admission category is in column C
+      const name = row.getCell("B").text?.toString().trim(); // Assuming name is in column B
+      const admissionCategory = row.getCell("C").text?.toString().trim(); // Assuming admission category is in column C
 
       // Insert data into the corresponding table based on the batch
       studentModel.insertStudent(batch, name, admissionCategory);

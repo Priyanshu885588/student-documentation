@@ -26,6 +26,7 @@ const insertStudent = (batch, name, admissionCategory) => {
   db.query(query, [name, admissionCategory], (err, results) => {
     if (err) {
       console.error(`Error inserting student into ${tableName}:`, err.message);
+      console.log(name);
     }
   });
 };
