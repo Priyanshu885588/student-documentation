@@ -3,6 +3,9 @@ const app = express();
 const db = require("../db/db");
 const jwt = require("jsonwebtoken");
 const adminModel = require("../models/admin");
+const nodemailer = require("nodemailer");
+const dns = require("dns");
+require("dotenv").config();
 
 const AdminRegister = async (req, res) => {
   adminModel.createAdminTable();
@@ -52,4 +55,110 @@ const AdminLogin = async (req, res) => {
   }
 };
 
-module.exports = { AdminRegister, AdminLogin };
+const sendVerificationCode = async (req, res) => {
+  try {
+    const { email, verificationCode } = req.body;
+
+    if (!email || !verificationCode) {
+      return res
+        .status(400)
+        .json({ error: "Email and verification code are required." });
+    }
+
+    // Validate the email domain
+    const isValidDomain = await isValidEmailDomain(email);
+
+    if (!isValidDomain) {
+      return res.status(400).json({ error: "Invalid email domain." });
+    }
+
+    // Send verification code to the provided email
+    await sendVerificationCodeEmail(email, verificationCode);
+
+    return res
+      .status(200)
+      .json({ message: "Verification code sent successfully." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const sendVerificationCodeEmail = async (userEmail, verificationCode) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.SECRET_EMAIL, // Your Gmail address
+      pass: process.env.SECRET_PASS, // Your Gmail password or an app-specific password
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.SECRET_EMAIL,
+    to: "basketball313032@gmail.com",
+    subject: "Verification Code for Registration",
+    html: `
+    <html>
+      <head>
+        <style>
+          body {
+            text-align: center;
+            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          h2 {
+            color: #333333;
+          }
+          p {
+            color: #555555;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+        <center>
+        <h6>${userEmail} </h6>
+          <h4>Requested verification code for admin registration in student documentation upload website ~RNSIT</h4>
+          <br>
+          <p>Verification code is:</p>
+          <h1><strong>${verificationCode}</strong></h1>
+          </center>
+          <br>
+          <br>
+          <br>
+          <h6 style="font-style: italic;">For verification purposes only for the student documentation upload <br> Thank You</h6>
+        </div>
+      </body>
+    </html>
+  `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Verification code sent to admin email`);
+  } catch (error) {
+    console.error("Email sending error:", error);
+    throw new Error("Failed to send verification code email.");
+  }
+};
+
+const isValidEmailDomain = async (email) => {
+  try {
+    const domain = email.split("@")[1];
+    const mxRecords = await dns.promises.resolveMx(domain);
+    return mxRecords && mxRecords.length > 0;
+  } catch (error) {
+    console.error("Email domain validation error:", error);
+    return false;
+  }
+};
+
+module.exports = { AdminRegister, AdminLogin, sendVerificationCode };
