@@ -14,6 +14,7 @@ const AdminRegister = async (req, res) => {
   const token = jwt.sign({ Email, Password }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
+
   try {
     await db
       .promise()
@@ -26,7 +27,13 @@ const AdminRegister = async (req, res) => {
       .status(200)
       .json({ message: "Admin registred Successfuly", token: token });
   } catch (error) {
-    res.status(400).json({ message: "Something went wrong" });
+    const admin = await db.promise().query("select Gmail from admin_table where Gmail = ?",[Email])
+    if(admin){
+        res.status(400).json({message:`Admin with the email ${Email} already exists`})
+    }
+    else{
+        res.status(400).json({ message: "Something went wrong"});
+    }
   }
 };
 
