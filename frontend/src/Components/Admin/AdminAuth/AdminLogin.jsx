@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { adminLogin } from "../services/Api"; // Import your API service
 
@@ -25,6 +25,12 @@ export const AdminLogin = () => {
       console.error("Login failed:", error.message);
     }
   };
+  useEffect(() => {
+    const handleLogout = () => {
+      localStorage.removeItem("token");
+    };
+    handleLogout();
+  }, []);
 
   return (
     <div className="flex justify-center items-center h-screen w-full">
