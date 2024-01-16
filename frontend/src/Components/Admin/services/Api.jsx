@@ -31,4 +31,13 @@ const uploadFile = async (formData) => {
     throw error;
   }
 };
-export { fetchStudentData, uploadFile, fetchStudentBatches };
+
+const adminLogin = async (data) => {
+  try {
+    const response = await axios.post(`${baseURL}/login`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export { fetchStudentData, uploadFile, fetchStudentBatches, adminLogin };
