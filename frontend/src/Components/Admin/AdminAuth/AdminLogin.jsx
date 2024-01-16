@@ -1,37 +1,61 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import './AdminLogin.css'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { adminLogin } from "../services/Api"; // Import your API service
+
+import "./AdminLogin.css";
 import { FaUser } from "react-icons/fa";
 import { FaLock } from "react-icons/fa6";
 
 export const AdminLogin = () => {
-  return (<>
-       <div className='wrapper'>
-        <form action="">
-        <h1>Login</h1>
-        <div className="input-box">
-          <input type="email" placeholder="Email" required />
-          <FaUser className="icon" />
-        </div>
-        <div className="input-box">
-          <input type="password" placeholder="Password" required />
-          <FaLock className="icon"/>
-          
-        </div><button type="submit">Login</button></form>
-         <div><button action='' >Sign up </button></div> 
-         {/*need 'AdminSignup' for signup */}
+  const navigate = useNavigate();
 
-       
-       </div>
-       
-  
-  </>);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  
-      
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  
+    try {
+      const data = { Email: email, Password: password };
+      const result = await adminLogin(data);
+      const { token, msg } = result;
+      localStorage.setItem("token", token);
+      navigate("/admin/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error.message);
+    }
+  };
 
-
-  
+  return (
+    <div className="flex justify-center items-center h-screen w-full">
+      <div className="wrapper">
+        <form onSubmit={handleLogin}>
+          <h1>Login</h1>
+          <div className="input-box">
+            <input
+              type="email"
+              placeholder="Email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <FaUser className="icon" color="black" />
+          </div>
+          <div className="input-box">
+            <input
+              type="password"
+              placeholder="Password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <FaLock className="icon" color="black" />
+          </div>
+          <button type="submit" className="hover:opacity-65">
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 };
