@@ -4,12 +4,14 @@ import { adminLogin } from "../services/Api";
 import { AdminSignUp } from "./AdminSignup";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { MdEmail } from "react-icons/md";
+import { Loading } from "../../UI/Loading";
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signUp, setSignUp] = useState(false);
+  const [loading, isLoading] = useState(false);
 
   const toggleSignUp = () => {
     setSignUp((prevVisibility) => !prevVisibility);
@@ -18,6 +20,7 @@ export const AdminLogin = () => {
     e.preventDefault();
 
     try {
+      isLoading(true);
       const data = { Email: email, Password: password };
       const result = await adminLogin(data);
       const { token, msg } = result;
@@ -25,6 +28,8 @@ export const AdminLogin = () => {
       navigate("/admin/dashboard");
     } catch (error) {
       console.error("Login failed:", error.message);
+    } finally {
+      isLoading(false);
     }
   };
   useEffect(() => {
@@ -36,6 +41,14 @@ export const AdminLogin = () => {
 
   if (signUp) {
     return <AdminSignUp toggleSignUp={toggleSignUp} />;
+  }
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <Loading />
+      </div>
+    );
   }
 
   return (

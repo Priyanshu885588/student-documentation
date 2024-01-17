@@ -40,4 +40,30 @@ const adminLogin = async (data) => {
     throw error;
   }
 };
-export { fetchStudentData, uploadFile, fetchStudentBatches, adminLogin };
+
+const verificationAdmin = async (data) => {
+  try {
+    const response = await axios.post(`${baseURL}/verification-code`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const adminSignUp = async (data) => {
+  try {
+    const response = await axios.post(`${baseURL}/register`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export {
+  fetchStudentData,
+  uploadFile,
+  fetchStudentBatches,
+  adminLogin,
+  verificationAdmin,
+  adminSignUp,
+};
