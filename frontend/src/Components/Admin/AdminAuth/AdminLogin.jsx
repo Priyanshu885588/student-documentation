@@ -11,7 +11,18 @@ export const AdminLogin = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+ 
+  
+    const [divStyles, setDivStyles] = useState("");
+  
+    const changeDivStyle = (divId) => {
+      setDivStyles((prevStyles) => ({
+        ...prevStyles,
+        [divId]: {
+          color:'red'
+        },
+      }));
+    };
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -32,36 +43,49 @@ export const AdminLogin = () => {
     handleLogout();
   }, []);
 
+  const [styles, setStyles] = useState("");
+  const LoginButton = () => {
+    
+    setStyles({
+      log: { left: '-400px' },
+      reg: { left: '50px' },
+      button: { left: '110px' },
+    });
+    
+ }; 
+ const Signupbutton=()=>{
+  
+  setStyles({
+    log: { left: '50px' },
+    reg: { left: '450px' },
+    button: { left: '0' },
+  });
+ };
+  
+
   return (
-    <div className="flex justify-center items-center h-screen w-full">
-      <div className="wrapper">
-        <form onSubmit={handleLogin}>
-          <h1>Login</h1>
-          <div className="input-box">
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <FaUser className="icon" color="black" />
-          </div>
-          <div className="input-box">
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <FaLock className="icon" color="black" />
-          </div>
-          <button type="submit" className="hover:opacity-65">
-            Login
-          </button>
+    <div className='wrapper'>
+    <div className="form-box" >
+      <div className="button-box">
+        <div id="btn" style={styles.button}></div>
+        <button type="button" className="toggle-btn  " onClick={Signupbutton}>Login</button>
+        <button type="button" className="toggle-btn" onClick={LoginButton}>Signup</button>
+
+        </div>
+        <form id="login" style={styles.log} className="input-group">
+          <input type="text" className="input-field" placeholder="Email" required />
+          <input type="password" className="input-field" placeholder="Password" required />
+          <button type="submit" className="submit-btn">LOGIN</button>
         </form>
-      </div>
+        <form id="Signup" style={styles.reg} className="input-group">
+          <input type="text" className="input-field" placeholder="userID" required />
+          <input type="email" className="input-field" placeholder="EmailID" required />
+          <input type="password" className="input-field" placeholder="Password" required />
+          <button type="submit" className="submit-btn">Log in</button>
+        </form>
+      
+    </div>
+    
     </div>
   );
 };
