@@ -10,3 +10,7 @@ body {
   position: relative;
   overflow-x: hidden;
 }
+.rnsit-image {
+  background-image: url(assests/rnsit.jpg);
+  background-size: cover;
+}
