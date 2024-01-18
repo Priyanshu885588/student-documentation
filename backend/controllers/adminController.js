@@ -1,50 +1,165 @@
 const express = require("express");
 const app = express();
-const db = require("../db/db")
-const jwt = require('jsonwebtoken')
+const db = require("../db/db");
+const jwt = require("jsonwebtoken");
+const adminModel = require("../models/admin");
+const nodemailer = require("nodemailer");
+const dns = require("dns");
+const zod=require("zod");
+require("dotenv").config();
 
-const AdminRegister = async (req,res)=>{
-    const {Email,Password} = req.body;
-    if(!Email || !Password){
-        return res
-        .status(400)
-        .json({ message: "Please enter Email and Password"});
+const AdminRegister = async (req, res) => {
+  adminModel.createAdminTable();
+  const { Email, Password } = req.body;
+  if (!Email || !Password) {
+    return res.status(400).json({ message: "Please enter Email and Password" });
+  }
+  console.log(Email, Password);
+  const token = jwt.sign({ Email, Password }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+
+  try {
+    await db
+      .promise()
+      .query("insert into admin_table (Gmail,Password) values(?,?)", [
+        Email,
+        Password,
+      ]);
+
+    res
+      .status(200)
+      .json({ message: "Admin registred Successfuly", token: token });
+  } catch (error) {
+    const admin = await db.promise().query("select Gmail from admin_table where Gmail = ?",[Email])
+    if(admin){
+        res.status(400).json({message:`Admin with the email ${Email} already exists`})
     }
-    console.log(Email,Password)
-    const token = jwt.sign({ Email ,Password}, process.env.JWT_SECRET, {
-        expiresIn: '30d',
-      })
-    try {
-        await db.promise().query('insert into admin_table (Gmail,Password) values(?,?)',[Email,Password])
-        
-        res.status(200).json({ message: "Admin registred Successfuly",token:token});
-    } catch (error) {
+    else{
         res.status(400).json({ message: "Something went wrong"});
     }
-}
+  }
+};
 
+const AdminLogin = async (req, res) => {
+  const { Email, Password } = req.body;
+  try {
+    const data = await db
+      .promise()
+      .query("select * from admin_table where Gmail = ? && Password = ?", [
+        Email,
+        Password,
+      ]);
+    if (data[0].length > 0) {
+      const token = jwt.sign({ Email, Password }, process.env.JWT_SECRET, {
+        expiresIn: "30d",
+      });
+      res.send({ token, msg: "Admin logged in successfully" });
+    } else {
+      res.send({ message: "Credential don't match!!!" });
+    }
+  } catch (error) {
+    res.status(400).json({ message: "Something went wrong" });
+  }
+};
 
-const AdminLogin = async (req,res)=>{
-    const {Email,Password} = req.user;
-    if(!Email || !Password){
-        return res
+const sendVerificationCode = async (req, res) => {
+  try {
+    const { email, verificationCode } = req.body;
+
+    if (!email || !verificationCode) {
+      return res
         .status(400)
-        .json({ message: "Please enter Email and Password"});
+        .json({ error: "Email and verification code are required." });
     }
-    console.log(Email,Password)
-    try {
-        const data = await db.promise().query('select * from admin_table where Gmail = ? && Password = ?',[Email,Password])
-        console.log(data[0][0]);
-        if(data[0].length > 0){
-            res.send({data:data[0][0],msg:"Admin logedinsuccessfully"})
-        }
-        else{
-            res.send({message:"Credential don't match!!!"})
-        }
-    } catch (error) {
-        res.status(400).json({ message: "Something went wrong"});
+
+    // Validate the email domain
+    const isValidDomain = await isValidEmailDomain(email);
+
+    if (!isValidDomain) {
+      return res.status(400).json({ error: "Invalid email domain." });
     }
-}
 
-module.exports = {AdminRegister , AdminLogin}
+    // Send verification code to the provided email
+    await sendVerificationCodeEmail(email, verificationCode);
 
+    return res
+      .status(200)
+      .json({ message: "Verification code sent successfully." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const sendVerificationCodeEmail = async (userEmail, verificationCode) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.SECRET_EMAIL, // Your Gmail address
+      pass: process.env.SECRET_PASS, // Your Gmail password or an app-specific password
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.SECRET_EMAIL,
+    to: "basketball313032@gmail.com",
+    subject: "Verification Code for Registration",
+    html: `
+    <html>
+      <head>
+        <style>
+          body {
+            text-align: center;
+            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          h2 {
+            color: #333333;
+          }
+          p {
+            color: #555555;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+        <center>
+        <h6>${userEmail} </h6>
+          <h4>Requested verification code for admin registration in student documentation upload website ~RNSIT</h4>
+          <br>
+          <p>Verification code is:</p>
+          <h1><strong>${verificationCode}</strong></h1>
+          </center>
+          <br>
+          <br>
+          <br>
+          <h6 style="font-style: italic;">For verification purposes only for the student documentation upload <br> Thank You</h6>
+        </div>
+      </body>
+    </html>
+  `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Verification code sent to admin email`);
+  } catch (error) {
+    console.error("Email sending error:", error);
+    throw new Error("Failed to send verification code email.");
+  }
+};
+
+const isValidEmailDomain = async (email) => {
+  
+};
+
+module.exports = { AdminRegister, AdminLogin, sendVerificationCode };
