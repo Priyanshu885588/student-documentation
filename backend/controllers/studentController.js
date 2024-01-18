@@ -37,14 +37,18 @@ const studentAuth = async (req,res)=>{
         msg:"Enter unique id and student name"
        })
     }
-    console.log(uniqueid,name);
+    res.cookie('uniqueid',uniqueid);
+    res.cookie('name',name);
 
     try{
         const data=await db.promise().query('SELECT * FROM student_2026 WHERE name like ? AND unique_Id like ?',[name,uniqueid])
         console.log(data[0][0]);
         if(data[0].length>0)
         {
+          
             res.status(400).json({msg:"Student logged in successfully"})
+           
+            
         }
         else{
             res.status(400).json({msg:"Invalid credentials"})
