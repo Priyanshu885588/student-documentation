@@ -44,7 +44,13 @@ const studentAuth = async (req,res)=>{
         console.log(data[0][0]);
         if(data[0].length>0)
         {
+          res.cookie({
+            UID:uniqueid,
+            Name:name
+          })
             res.status(400).json({msg:"Student logged in successfully"})
+           console.log(req.cookie);
+            
         }
         else{
             res.status(400).json({msg:"Invalid credentials"})
