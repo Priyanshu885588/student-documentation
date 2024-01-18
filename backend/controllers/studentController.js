@@ -37,8 +37,10 @@ const studentAuth = async (req,res)=>{
         msg:"Enter unique id and student name"
        })
     }
-    res.cookie('uniqueid',uniqueid);
-    res.cookie('name',name);
+
+    res.cookie('uniqueid', uniqueid);
+    res.cookie('name', name);
+
 
     try{
         const data=await db.promise().query('SELECT * FROM student_2026 WHERE name like ? AND unique_Id like ?',[name,uniqueid])

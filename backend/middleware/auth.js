@@ -41,9 +41,9 @@ catch(error)
     res.status(200).json({
         msg:"Internal Error occured"
     })
+}
+}
 
-}
-}
 
 module.exports = authenticationMiddleware
 

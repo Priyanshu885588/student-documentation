@@ -7,6 +7,9 @@ const uploadRoutes = require("./routes/uploadRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
