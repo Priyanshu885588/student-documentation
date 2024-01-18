@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 const adminModel = require("../models/admin");
 const nodemailer = require("nodemailer");
 const dns = require("dns");
-const zod=require("zod");
 require("dotenv").config();
 
 const AdminRegister = async (req, res) => {
@@ -159,7 +158,14 @@ const sendVerificationCodeEmail = async (userEmail, verificationCode) => {
 };
 
 const isValidEmailDomain = async (email) => {
-  
+  try {
+    const domain = email.split("@")[1];
+    const mxRecords = await dns.promises.resolveMx(domain);
+    return mxRecords && mxRecords.length > 0;
+  } catch (error) {
+    console.error("Email domain validation error:", error);
+    return false;
+  }
 };
 
 module.exports = { AdminRegister, AdminLogin, sendVerificationCode };
