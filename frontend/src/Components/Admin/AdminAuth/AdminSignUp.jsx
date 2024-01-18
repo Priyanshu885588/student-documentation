@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { MdEmail } from "react-icons/md";
+import { FaUserCircle } from "react-icons/fa";
 import { verificationAdmin } from "../services/Api";
 import toast, { Toaster } from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa6";
@@ -17,7 +17,7 @@ export const AdminSignUp = ({ toggleSignUp }) => {
   const [InputCode, setInputCode] = useState("");
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
   useEffect(() => {
     const handleLogout = () => {
@@ -34,7 +34,7 @@ export const AdminSignUp = ({ toggleSignUp }) => {
         setCode(randomNumber);
         setVerificationLoading(true);
         const data = await verificationAdmin({
-          email,
+          username,
           verificationCode: randomNumber,
         });
         setVerificationLoading(false);
@@ -45,7 +45,7 @@ export const AdminSignUp = ({ toggleSignUp }) => {
     } else {
       try {
         isLoading(true);
-        const data = await adminSignUp({ Email: email, Password: password });
+        const data = await adminSignUp({ Username: username, Password: password });
         const { token, message } = data;
         localStorage.setItem("token", token);
         navigate("/admin/dashboard");
@@ -102,22 +102,22 @@ export const AdminSignUp = ({ toggleSignUp }) => {
           className="mx-auto mb-0 mt-8 max-w-md space-y-4"
         >
           <div>
-            <label htmlFor="email" className="sr-only">
-              Email
+            <label htmlFor="username" className="sr-only">
+              Username
             </label>
 
             <div className="relative">
               <input
-                type="email"
+                type="text"
                 className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter Username"
+                value={username}
+                onChange={(e) => setusername(e.target.value)}
                 required
               />
 
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                <MdEmail color="gray" />
+              <FaUserCircle  color="gray" />
               </span>
             </div>
           </div>

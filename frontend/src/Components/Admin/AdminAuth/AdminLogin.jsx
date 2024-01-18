@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { adminLogin } from "../services/Api";
 import { AdminSignUp } from "./AdminSignup";
+import { FaUserCircle } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { MdEmail } from "react-icons/md";
 import { Loading } from "../../UI/Loading";
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
   const [signUp, setSignUp] = useState(false);
   const [loading, isLoading] = useState(false);
@@ -21,7 +21,7 @@ export const AdminLogin = () => {
 
     try {
       isLoading(true);
-      const data = { Email: email, Password: password };
+      const data = { Username: username, Password: password };
       const result = await adminLogin(data);
       const { token, msg } = result;
       localStorage.setItem("token", token);
@@ -67,20 +67,20 @@ export const AdminLogin = () => {
           className="mx-auto mb-0 mt-8 max-w-md space-y-4"
         >
           <div>
-            <label htmlFor="email" className="sr-only">
-              Email
+            <label htmlFor="username" className="sr-only">
+              username
             </label>
 
             <div className="relative">
               <input
-                type="email"
+                type="username"
                 className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter username"
+                value={username}
+                onChange={(e) => setusername(e.target.value)}
               />
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                <MdEmail color="gray" />
+              <FaUserCircle  color="gray" />
               </span>
             </div>
           </div>
