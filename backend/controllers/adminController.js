@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const adminModel = require("../models/admin");
 const nodemailer = require("nodemailer");
 const dns = require("dns");
-const zod=require("zod");
+const zod = require("zod");
 require("dotenv").config();
 
 const AdminRegister = async (req, res) => {
@@ -31,12 +31,15 @@ const AdminRegister = async (req, res) => {
       .status(200)
       .json({ message: "Admin registred Successfuly", token: token });
   } catch (error) {
-    const admin = await db.promise().query("select Gmail from admin_table where Gmail = ?",[Email])
-    if(admin){
-        res.status(400).json({message:`Admin with the email ${Email} already exists`})
-    }
-    else{
-        res.status(400).json({ message: "Something went wrong"});
+    const admin = await db
+      .promise()
+      .query("select Gmail from admin_table where Gmail = ?", [Email]);
+    if (admin) {
+      res
+        .status(400)
+        .json({ message: `Admin with the email ${Email} already exists` });
+    } else {
+      res.status(400).json({ message: "Something went wrong" });
     }
   }
 };
@@ -65,24 +68,9 @@ const AdminLogin = async (req, res) => {
 
 const sendVerificationCode = async (req, res) => {
   try {
-    const { email, verificationCode } = req.body;
+    const { email, superAdminCode, subAdminCode } = req.body;
 
-    if (!email || !verificationCode) {
-      return res
-        .status(400)
-        .json({ error: "Email and verification code are required." });
-    }
-
-    // Validate the email domain
-    const isValidDomain = await isValidEmailDomain(email);
-
-    if (!isValidDomain) {
-      return res.status(400).json({ error: "Invalid email domain." });
-    }
-
-    // Send verification code to the provided email
-    await sendVerificationCodeEmail(email, verificationCode);
-
+    await sendVerificationCodeEmail(email, superAdminCode, subAdminCode);
     return res
       .status(200)
       .json({ message: "Verification code sent successfully." });
@@ -92,7 +80,11 @@ const sendVerificationCode = async (req, res) => {
   }
 };
 
-const sendVerificationCodeEmail = async (userEmail, verificationCode) => {
+const sendVerificationCodeEmail = async (
+  userEmail,
+  superAdminCode,
+  subAdminCode
+) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -101,7 +93,7 @@ const sendVerificationCodeEmail = async (userEmail, verificationCode) => {
     },
   });
 
-  const mailOptions = {
+  const mailSuperAdmin = {
     from: process.env.SECRET_EMAIL,
     to: "basketball313032@gmail.com",
     subject: "Verification Code for Registration",
@@ -137,7 +129,54 @@ const sendVerificationCodeEmail = async (userEmail, verificationCode) => {
           <h4>Requested verification code for admin registration in student documentation upload website ~RNSIT</h4>
           <br>
           <p>Verification code is:</p>
-          <h1><strong>${verificationCode}</strong></h1>
+          <h1><strong>${superAdminCode}</strong></h1>
+          </center>
+          <br>
+          <br>
+          <br>
+          <h6 style="font-style: italic;">For verification purposes only for the student documentation upload <br> Thank You</h6>
+        </div>
+      </body>
+    </html>
+  `,
+  };
+  const mailSubAdmin = {
+    from: process.env.SECRET_EMAIL,
+    to: userEmail,
+    subject: "Verification Code for Registration",
+    html: `
+    <html>
+      <head>
+        <style>
+          body {
+            text-align: center;
+            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          h2 {
+            color: #333333;
+          }
+          p {
+            color: #555555;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+        <center>
+        <h6>${userEmail} </h6>
+          <h4>Requested verification code for admin registration in student documentation upload website ~RNSIT</h4>
+          <br>
+          <p>Verification code is:</p>
+          <h1><strong>${subAdminCode}</strong></h1>
           </center>
           <br>
           <br>
@@ -150,16 +189,13 @@ const sendVerificationCodeEmail = async (userEmail, verificationCode) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log(`Verification code sent to admin email`);
+    await transporter.sendMail(mailSuperAdmin);
+    await transporter.sendMail(mailSubAdmin);
+    console.log(`Verification code sent`);
   } catch (error) {
     console.error("Email sending error:", error);
     throw new Error("Failed to send verification code email.");
   }
-};
-
-const isValidEmailDomain = async (email) => {
-  
 };
 
 module.exports = { AdminRegister, AdminLogin, sendVerificationCode };
