@@ -4,18 +4,18 @@ const db = require("../db/db");
 const jwt = require("jsonwebtoken");
 const adminModel = require("../models/admin");
 const nodemailer = require("nodemailer");
-const dns = require("dns");
-const zod = require("zod");
 require("dotenv").config();
 
 const AdminRegister = async (req, res) => {
   adminModel.createAdminTable();
-  const { Email, Password } = req.body;
-  if (!Email || !Password) {
-    return res.status(400).json({ message: "Please enter Email and Password" });
+  const { Username, Password } = req.body;
+  if (!Username || !Password) {
+    return res
+      .status(400)
+      .json({ message: "Please enter Username and Password" });
   }
-  console.log(Email, Password);
-  const token = jwt.sign({ Email, Password }, process.env.JWT_SECRET, {
+  console.log(Username, Password);
+  const token = jwt.sign({ Username, Password }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 
@@ -23,7 +23,7 @@ const AdminRegister = async (req, res) => {
     await db
       .promise()
       .query("insert into admin_table (Gmail,Password) values(?,?)", [
-        Email,
+        Username,
         Password,
       ]);
 
@@ -33,11 +33,11 @@ const AdminRegister = async (req, res) => {
   } catch (error) {
     const admin = await db
       .promise()
-      .query("select Gmail from admin_table where Gmail = ?", [Email]);
+      .query("select Gmail from admin_table where Gmail = ?", [Username]);
     if (admin) {
-      res
-        .status(400)
-        .json({ message: `Admin with the email ${Email} already exists` });
+      res.status(400).json({
+        message: `Admin with the username ${Username} already exists`,
+      });
     } else {
       res.status(400).json({ message: "Something went wrong" });
     }
@@ -45,16 +45,16 @@ const AdminRegister = async (req, res) => {
 };
 
 const AdminLogin = async (req, res) => {
-  const { Email, Password } = req.body;
+  const { Username, Password } = req.body;
   try {
     const data = await db
       .promise()
       .query("select * from admin_table where Gmail = ? && Password = ?", [
-        Email,
+        Username,
         Password,
       ]);
     if (data[0].length > 0) {
-      const token = jwt.sign({ Email, Password }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ Username, Password }, process.env.JWT_SECRET, {
         expiresIn: "30d",
       });
       res.send({ token, msg: "Admin logged in successfully" });
@@ -68,9 +68,9 @@ const AdminLogin = async (req, res) => {
 
 const sendVerificationCode = async (req, res) => {
   try {
-    const { email, superAdminCode, subAdminCode } = req.body;
+    const { username, verificationCode } = req.body;
 
-    await sendVerificationCodeEmail(email, superAdminCode, subAdminCode);
+    await sendVerificationCodeEmail(username, verificationCode);
     return res
       .status(200)
       .json({ message: "Verification code sent successfully." });
@@ -80,11 +80,7 @@ const sendVerificationCode = async (req, res) => {
   }
 };
 
-const sendVerificationCodeEmail = async (
-  userEmail,
-  superAdminCode,
-  subAdminCode
-) => {
+const sendVerificationCodeEmail = async (username, verificationCode) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -125,58 +121,11 @@ const sendVerificationCodeEmail = async (
       <body>
         <div class="container">
         <center>
-        <h6>${userEmail} </h6>
+        <h6>${username} </h6>
           <h4>Requested verification code for admin registration in student documentation upload website ~RNSIT</h4>
           <br>
           <p>Verification code is:</p>
-          <h1><strong>${superAdminCode}</strong></h1>
-          </center>
-          <br>
-          <br>
-          <br>
-          <h6 style="font-style: italic;">For verification purposes only for the student documentation upload <br> Thank You</h6>
-        </div>
-      </body>
-    </html>
-  `,
-  };
-  const mailSubAdmin = {
-    from: process.env.SECRET_EMAIL,
-    to: userEmail,
-    subject: "Verification Code for Registration",
-    html: `
-    <html>
-      <head>
-        <style>
-          body {
-            text-align: center;
-            background-color: #f4f4f4;
-            font-family: 'Arial', sans-serif;
-          }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          }
-          h2 {
-            color: #333333;
-          }
-          p {
-            color: #555555;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-        <center>
-        <h6>${userEmail} </h6>
-          <h4>Requested verification code for admin registration in student documentation upload website ~RNSIT</h4>
-          <br>
-          <p>Verification code is:</p>
-          <h1><strong>${subAdminCode}</strong></h1>
+          <h1><strong>${verificationCode}</strong></h1>
           </center>
           <br>
           <br>
@@ -190,11 +139,10 @@ const sendVerificationCodeEmail = async (
 
   try {
     await transporter.sendMail(mailSuperAdmin);
-    await transporter.sendMail(mailSubAdmin);
     console.log(`Verification code sent`);
   } catch (error) {
     console.error("Email sending error:", error);
-    throw new Error("Failed to send verification code email.");
+    throw new Error("Failed to send verification code to email.");
   }
 };
 
