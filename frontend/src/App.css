@@ -10,3 +10,52 @@ body {
   position: relative;
   overflow-x: hidden;
 }
+.rnsit-image {
+  background-image: url(assests/rnsit.jpg);
+  background-size: cover;
+}
+.rnsit-logo {
+  background-image: url(assests/rnsit-logo.png);
+  background-size: 100%;
+}
+
+.zoom {
+  position: absolute;
+  background-color: #09015f;
+  width: 10rem;
+  height: 10rem;
+  animation: zoom 3s ease-in-out;
+  border-radius: 50%;
+  z-index: 2;
+}
+@keyframes zoom {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(100);
+  }
+}
+.upward-move {
+  position: absolute;
+  background-color: #ff6500;
+  width: 7rem;
+  height: 7rem;
+  animation: bounce 1.5s ease-in-out;
+  border-radius: 50%;
+  z-index: 5;
+}
+
+@keyframes bounce {
+  0% {
+    bottom: -100%;
+  }
+  100% {
+    bottom: 40%;
+  }
+}
