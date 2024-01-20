@@ -20,10 +20,13 @@ const getStudentData = async (req, res) => {
   try {
     const { batch,page } = req.query;
     const start_index = (page - 1) * 50;
+    const data = await db.promise().query(`SELECT count(*) FROM student_${batch}`)
+    const { ['count(*)']: countValue } = data[0][0]
+    const pagesCount =  Math.ceil(countValue/50);
     const [rows] = await db
       .promise()
       .query(`SELECT * FROM student_${batch} Limit ${start_index},50`);
-    res.status(200).json({rows,length:rows.length});
+    res.status(200).json({rows,length:rows.length,pagesCount:pagesCount});
   } catch (error) {
     console.error("Error executing the query:", error);
     res.status(500).json({ error: "Internal Server Error" });
