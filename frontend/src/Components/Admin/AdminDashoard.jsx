@@ -18,10 +18,10 @@ export const AdminDashboard = () => {
   const fetchData = async (batchData) => {
     try {
       setIsLoading(true);
-      const data = await fetchStudentData({ batch: batchData });
-      setStudentData(data);
+      const data = await fetchStudentData({ batch: batchData, page: 1 });
+      setStudentData(data.rows);
       const totalStudents = data.length;
-      const submittedStudents = data.reduce((count, student) => {
+      const submittedStudents = data.rows.reduce((count, student) => {
         return count + (student.status.data[0] === 1 ? 1 : 0);
       }, 0);
 
