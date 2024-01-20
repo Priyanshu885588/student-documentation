@@ -6,6 +6,7 @@ import { PiStudentDuotone } from "react-icons/pi";
 import { FaAccusoft } from "react-icons/fa";
 import { FaCodeBranch } from "react-icons/fa";
 import { GrGroup } from "react-icons/gr";
+import Pagination from "./Pageination";
 
 export const AdminDashboard = () => {
   const [batch, setBatch] = useState("");
@@ -14,17 +15,22 @@ export const AdminDashboard = () => {
   const [studentData, setStudentData] = useState([]);
   const [studentCount, setStudentCount] = useState({});
   const [batches, setIsbatches] = useState();
+  const [pgCount, setpagecount] = useState();
+
+  
 
   const fetchData = async (batchData) => {
+    
     try {
       setIsLoading(true);
       const data = await fetchStudentData({ batch: batchData, page: 1 });
       setStudentData(data.rows);
+      setpagecount(data.pagesCount)
       const totalStudents = data.length;
       const submittedStudents = data.rows.reduce((count, student) => {
         return count + (student.status.data[0] === 1 ? 1 : 0);
       }, 0);
-
+      
       setStudentCount({
         totalStudents: totalStudents,
         submittedStudents: submittedStudents,
@@ -157,9 +163,17 @@ export const AdminDashboard = () => {
                       </option>
                     ))}
                 </select>
+
+
+
               </div>
             </div>
           </div>
+
+          <div>
+                     <Pagination  pageCount={pgCount}  /> 
+          </div>
+
           <div className="min-h-60 w-full bg-white rounded-xl">
             {isError ? (
               <div className="w-full h-60 flex justify-center items-center">

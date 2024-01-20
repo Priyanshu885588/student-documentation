@@ -1,20 +1,18 @@
-// Save this file with a .jsx extension, e.g., Pagination.jsx
-
 import React, { useEffect, useState } from "react";
-// Include any other global styles you might have
+import { IoPlayBackSharp } from "react-icons/io5";
+import { IoPlayForwardSharp } from "react-icons/io5";
 
-const Pagination = ({
-  pagesToDisplay = 5,
-  pageCount = 10,
-}) => {
+const Pagination = ({ pageCount }) => {
   const [pages, setPages] = useState([]);
   const [activePage, setActivePage] = useState();
+  const [currentPage, setCurrentPage] = useState(0); // Add this line
+
+  const pagesToDisplay = 5;
 
   const buildPagination = (pageIndex) => {
     setActivePage(pageIndex);
-
-    console.log("pageIndex", pageIndex);
-
+    setCurrentPage(pageIndex); // Update the current page
+    
     let newPages = [];
 
     let start = 0;
@@ -46,16 +44,17 @@ const Pagination = ({
       <button
         disabled={activePage === 0}
         onClick={() => buildPagination(0)}
-        className="grid place-items-center w-34 h-34 p-0 border-0 border-radius-3 bg-262528 text-f9f9f9 text-18 cursor-pointer"
+        className="grid place-items-center w-35 h-34 p-3 border-2 rounded-xl font-euclid text-14 shadow-md bg-white text-black text-18 cursor-pointer"
         type="button"
       >
-        first_page
+        <IoPlayBackSharp />
       </button>
       {pages.map((page) => (
         <button
-          className={`grid place-items-center w-34 h-34 p-0 border-0 border-radius-3 font-euclid text-14 ${
-            page === activePage ? "bg-8f44fd text-white" : ""
-          }`}
+          className={`grid place-items-center w-35 h-34 p-3 border-2 rounded-xl font-euclid text-14 shadow-md
+           ${
+             page === activePage ? "bg-blue-700 text-yellow-500" : "bg-white"
+           }`}
           onClick={() => buildPagination(page)}
           key={page}
           type="button"
@@ -66,11 +65,14 @@ const Pagination = ({
       <button
         disabled={activePage === pageCount - 1}
         onClick={() => buildPagination(pageCount - 1)}
-        className="grid place-items-center w-34 h-34 p-0 border-0 border-radius-3 bg-262528 text-f9f9f9 text-18 cursor-pointer"
+        className="grid place-items-center w-35 h-34 p-3 border-2 rounded-xl font-euclid text-14 shadow-md bg-white text-black text-18 cursor-pointer"
         type="button"
       >
-        last_page
+        <IoPlayForwardSharp />
       </button>
+
+      
+      <div className="ml-4">Current Page: {currentPage + 1}</div>
     </div>
   );
 };
