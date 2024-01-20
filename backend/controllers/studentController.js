@@ -20,8 +20,8 @@ const getStudentData = async (req, res) => {
   try {
     const { batch,page } = req.query;
     const start_index = (page - 1) * 50;
-    const data = await db.promise().query(`SELECT count(name) FROM student_${batch}`)
-    const { ['count(name)']: countValue } = data[0][0]
+    const data = await db.promise().query(`SELECT count(*) FROM student_${batch}`)
+    const { ['count(*)']: countValue } = data[0][0]
     const pagesCount =  Math.ceil(countValue/50);
     const [rows] = await db
       .promise()
