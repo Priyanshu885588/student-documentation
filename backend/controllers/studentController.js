@@ -18,11 +18,12 @@ const getAllBatches = async (req, res) => {
 
 const getStudentData = async (req, res) => {
   try {
-    const { batch } = req.query;
+    const { batch,page } = req.query;
+    const start_index = (page - 1) * 50;
     const [rows] = await db
       .promise()
-      .query(`SELECT * FROM student_${batch.batch}`);
-    res.status(200).json(rows);
+      .query(`SELECT * FROM student_${batch} Limit ${start_index},50`);
+    res.status(200).json({rows,length:rows.length});
   } catch (error) {
     console.error("Error executing the query:", error);
     res.status(500).json({ error: "Internal Server Error" });
