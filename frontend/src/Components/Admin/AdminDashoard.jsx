@@ -16,21 +16,23 @@ export const AdminDashboard = () => {
   const [studentCount, setStudentCount] = useState({});
   const [batches, setIsbatches] = useState();
   const [pgCount, setpagecount] = useState();
+  const [page, setPage] = useState();
 
-  
-
-  const fetchData = async (batchData) => {
-    
+  const fetchData = async (batchData, currentPage) => {
     try {
       setIsLoading(true);
-      const data = await fetchStudentData({ batch: batchData, page: 1 });
+      const data = await fetchStudentData({
+        batch: batchData,
+        page: currentPage,
+      });
+      setPage(currentPage - 1);
       setStudentData(data.rows);
-      setpagecount(data.pagesCount)
+      setpagecount(data.pagesCount);
       const totalStudents = data.length;
       const submittedStudents = data.rows.reduce((count, student) => {
         return count + (student.status.data[0] === 1 ? 1 : 0);
       }, 0);
-      
+
       setStudentCount({
         totalStudents: totalStudents,
         submittedStudents: submittedStudents,
@@ -45,7 +47,7 @@ export const AdminDashboard = () => {
   const handleBatchChange = (e) => {
     const selectedBatch = e.target.value;
     setBatch(selectedBatch);
-    fetchData(selectedBatch);
+    fetchData(selectedBatch, 1);
   };
 
   useEffect(() => {
@@ -57,7 +59,7 @@ export const AdminDashboard = () => {
         // Assuming you want to initially fetch data for the first batch in the list
         if (batchesData.batches.length > 0) {
           setBatch(batchesData.batches[0]);
-          fetchData(batchesData.batches[0]);
+          fetchData(batchesData.batches[0], 1);
         } else {
           setIsbatches(null);
           setIsLoading(false);
@@ -163,15 +165,17 @@ export const AdminDashboard = () => {
                       </option>
                     ))}
                 </select>
-
-
-
               </div>
             </div>
           </div>
 
           <div>
-                     <Pagination  pageCount={pgCount}  /> 
+            <Pagination
+              pageCount={pgCount}
+              fetchData={fetchData}
+              batch={batch}
+              currentPage={page}
+            />
           </div>
 
           <div className="min-h-60 w-full bg-white rounded-xl">
@@ -197,7 +201,7 @@ export const AdminDashboard = () => {
                         key={student.id}
                         className="text-center border-b border-gray-30"
                       >
-                        <td className="py-2 px-4">{index + 1}</td>
+                        <td className="py-2 px-4">{student.insertion_order}</td>
                         <td className="py-2 px-4 mono">{student.id}</td>
                         <td className="py-2 px-4">{student.name}</td>
                         <td className="py-2 px-4">
