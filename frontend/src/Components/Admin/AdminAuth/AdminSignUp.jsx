@@ -15,6 +15,7 @@ export const AdminSignUp = ({ toggleSignUp }) => {
   const [loading, isLoading] = useState(false);
   const [Code, setCode] = useState(null);
   const [InputCode, setInputCode] = useState("");
+  const [isError, setIsError] = useState("");
   const navigate = useNavigate();
 
   const [username, setusername] = useState("");
@@ -41,11 +42,16 @@ export const AdminSignUp = ({ toggleSignUp }) => {
         toast.success(data.message);
       } catch (error) {
         toast.error("Error in sending code");
+        setCode(null);
+        setVerificationLoading(false);
       }
     } else {
       try {
         isLoading(true);
-        const data = await adminSignUp({ Username: username, Password: password });
+        const data = await adminSignUp({
+          Username: username,
+          Password: password,
+        });
         const { token, message } = data;
         localStorage.setItem("token", token);
         navigate("/admin/dashboard");
@@ -53,13 +59,15 @@ export const AdminSignUp = ({ toggleSignUp }) => {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          toast.error(error.response.data.message);
+          setIsError(error.response.data.message);
           // Display the error message or handle it as needed
         } else if (error.request) {
           // The request was made but no response was received
+          setIsError("No response received");
           console.error("No response received:", error.request);
         } else {
           // Something happened in setting up the request that triggered an Error
+          setIsError("Request setup error:");
           console.error("Request setup error:", error.message);
         }
       } finally {
@@ -117,7 +125,7 @@ export const AdminSignUp = ({ toggleSignUp }) => {
               />
 
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-              <FaUserCircle  color="gray" />
+                <FaUserCircle color="gray" />
               </span>
             </div>
           </div>
@@ -143,7 +151,7 @@ export const AdminSignUp = ({ toggleSignUp }) => {
               )}
               {verification && (
                 <span className=" absolute inset-y-0 end-0 grid place-content-center px-4">
-                  <IoCheckmarkDone color="gray" />
+                  <IoCheckmarkDone color="green" />
                 </span>
               )}
               {!verificationLoading && Code && !verification && (
@@ -193,6 +201,9 @@ export const AdminSignUp = ({ toggleSignUp }) => {
               {verification ? "Sign up" : "Send verification code to admin"}
             </button>
           </div>
+          {isError && (
+            <p className="text-left text-red-500 text-sm">{isError}</p>
+          )}
         </form>
       </div>
     </div>

@@ -2,10 +2,10 @@ import axios from "axios";
 
 const baseURL = "http://localhost:3000/api/v1/admin";
 
-const fetchStudentData = async (batch) => {
+const fetchStudentData = async (data) => {
   try {
     const response = await axios.get(`${baseURL}/students`, {
-      params: { batch },
+      params: data,
     });
     return response.data;
   } catch (error) {

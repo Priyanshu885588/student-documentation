@@ -6,6 +6,6 @@ export const StartingAnimation = () => {
       <div className="h-24 w-24 rnsit-logo z-50"></div>
       <div className="zoom "></div>
       <div className="upward-move "></div>
-    </div>
-  );
+    </div>
+  );
 };
