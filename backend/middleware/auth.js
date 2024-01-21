@@ -18,7 +18,7 @@ const authenticationMiddleware = async (req, res, next) => {
   }
 };
 
-const studentAuthMiddlware= async (req,res,next)=>{
+const studentAuthMiddleware= async (req,res,next)=>{
   const uniqueid=req.cookies.uniqueid;
   const name=req.cookies.name;
 
