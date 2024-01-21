@@ -19,9 +19,23 @@ body {
   background-size: 100%;
 }
 
+.homepage-bg-light {
+  background-image: url(assests/6.jpg);
+  background-color: rgba(0, 0, 0, 0.281);
+  background-size: cover;
+  background-blend-mode: darken;
+}
+
+.homepage-bg {
+  background-image: url(assests/6.jpg);
+  background-color: rgba(0, 0, 0, 0.742);
+  background-size: cover;
+  background-blend-mode: multiply;
+}
+
 .zoom {
   position: absolute;
-  background-color: #09015f;
+  background-color: rgba(0, 0, 0, 0.642);
   width: 10rem;
   height: 10rem;
   animation: zoom 3s ease-in-out;
