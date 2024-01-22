@@ -16,18 +16,19 @@ body {
 }
 .rnsit-logo {
   background-image: url(assests/rnsit-logo.png);
-  background-size: 100%;
+  background-size: 96px;
+  
 }
 
 .homepage-bg-light {
-  background-image: url(assests/6.jpg);
+  background-image: url(assests/8.jpeg);
   background-color: rgba(0, 0, 0, 0.281);
   background-size: cover;
   background-blend-mode: darken;
 }
 
 .homepage-bg {
-  background-image: url(assests/6.jpg);
+  background-image: url(assests/8.jpeg);
   background-color: rgba(0, 0, 0, 0.742);
   background-size: cover;
   background-blend-mode: multiply;
