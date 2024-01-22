@@ -146,4 +146,41 @@ const sendVerificationCodeEmail = async (username, verificationCode) => {
   }
 };
 
-module.exports = { AdminRegister, AdminLogin, sendVerificationCode };
+const search = async (req,res)=>{
+const { id,name,admission_category,status,batch} = req.query;
+const queryObject = {};
+
+if (admission_category) {
+  queryObject.admission_category = admission_category;
+}
+
+if (id) {
+  queryObject.id = id;
+}
+
+if (name) {
+  queryObject.name = name;
+}
+
+if(status){
+  queryObject.status = status;
+}
+
+
+try {
+  console.log([queryObject]);
+  const queryString = `SELECT * FROM student_${batch} WHERE ?`;
+  const students = await db.promise().query(queryString, [queryObject]);
+  
+  if (students.length === 0) {
+    return res.status(201).json("No job offers found...");
+  }
+
+  res.status(200).json(students);
+} catch (error) {
+  console.error(error);
+  res.status(400).json({ msg: "Something went wrong..." });
+}
+}
+
+module.exports = { AdminRegister, AdminLogin, sendVerificationCode,search };
