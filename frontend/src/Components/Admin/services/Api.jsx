@@ -59,6 +59,7 @@ const adminSignUp = async (data) => {
   }
 };
 
+
 export {
   fetchStudentData,
   uploadFile,

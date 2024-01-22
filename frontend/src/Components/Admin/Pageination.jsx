@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { IoPlayBackSharp, IoPlayForwardSharp } from "react-icons/io5";
+import { FaSearch } from "react-icons/fa";
 
 const Pagination = ({ pageCount, currentPage, fetchData, batch }) => {
   const [pages, setPages] = useState([]);
-
+  const [searchbox, setsearchbox] = useState();
+  
   const pagesToDisplay = 5;
 
   const buildPagination = (pageIndex) => {
@@ -36,9 +38,24 @@ const Pagination = ({ pageCount, currentPage, fetchData, batch }) => {
   const handleChange = (page) => {
     fetchData(batch, page + 1);
   };
-
-  return (
+  console.log(searchbox);  
+  return (<>
+  
+  <div className="absolute left-10 ">
+  <div className="relative ">
+    <input
+      type="text"
+      className="relative h-14 w-[450px] rounded-lg border-gray-200 pl-7 pr-14 text-xl shadow-sm uppercase"
+      placeholder="SEARCH"
+      onChange={(e)=>setsearchbox(e.target.value)}
+    />
+    <span className="absolute inset-y-0 right-0 flex items-center pr-4">
+      <FaSearch />
+    </span>
+  </div>
+</div>
     <div className="flex gap-4">
+      
       <button
         disabled={currentPage === 0}
         onClick={() => {
@@ -73,7 +90,7 @@ const Pagination = ({ pageCount, currentPage, fetchData, batch }) => {
         <IoPlayForwardSharp />
       </button>
     </div>
-  );
+  </>);
 };
 
 export default Pagination;
