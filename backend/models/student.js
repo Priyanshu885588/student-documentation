@@ -7,7 +7,9 @@ const createStudentTable = (batch) => {
       id VARCHAR(8) PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       admission_category VARCHAR(255) NOT NULL,
-      status BIT(1) DEFAULT 0
+      status BIT(1) DEFAULT 0,
+      insertion_order INT AUTO_INCREMENT,
+      UNIQUE KEY insertion_order_unique (insertion_order)
     )`;
 
   db.query(query, (err, results) => {

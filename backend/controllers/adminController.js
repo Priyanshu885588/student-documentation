@@ -59,12 +59,12 @@ const AdminLogin = async (req, res) => {
       const token = jwt.sign({ Username, Password }, process.env.JWT_SECRET, {
         expiresIn: "30d",
       });
-      res.send({ token, msg: "Admin logged in successfully" });
+      res.status(200).json({ token, msg: "Admin logged in successfully" });
     } else {
-      res.send({ message: "Credential don't match!!!" });
+      res.status(400).json({ message: "Credential doesn't match!!!" });
     }
   } catch (error) {
-    res.status(400).json({ message: "Something went wrong" });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 

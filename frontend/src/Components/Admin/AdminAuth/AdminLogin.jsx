@@ -5,6 +5,7 @@ import { AdminSignUp } from "./AdminSignup";
 import { FaUserCircle } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Loading } from "../../UI/Loading";
+import { toast } from "react-hot-toast";
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const [signUp, setSignUp] = useState(false);
   const [loading, isLoading] = useState(false);
+  const [isError, setIsError] = useState("");
 
   const toggleSignUp = () => {
     setSignUp((prevVisibility) => !prevVisibility);
@@ -23,11 +25,18 @@ export const AdminLogin = () => {
       isLoading(true);
       const data = { Username: username, Password: password };
       const result = await adminLogin(data);
-      const { token, msg } = result;
+      const { token, message } = result;
+      toast.error(message);
       localStorage.setItem("token", token);
       navigate("/admin/dashboard");
     } catch (error) {
-      console.error("Login failed:", error.message);
+      if (error.response) {
+        setIsError(error.response.data.message);
+        console.error("Login failed:", error.response.data.message);
+      } else {
+        console.error("Something went wrong");
+        setIsError("Something went wrong");
+      }
     } finally {
       isLoading(false);
     }
@@ -80,7 +89,7 @@ export const AdminLogin = () => {
                 onChange={(e) => setusername(e.target.value)}
               />
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-              <FaUserCircle  color="gray" />
+                <FaUserCircle color="gray" />
               </span>
             </div>
           </div>
@@ -115,6 +124,9 @@ export const AdminLogin = () => {
               Sign in
             </button>
           </div>
+          {isError && (
+            <p className="text-left text-red-500 text-sm">{isError}</p>
+          )}
         </form>
       </div>
     </div>
