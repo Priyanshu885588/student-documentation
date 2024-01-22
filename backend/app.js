@@ -6,7 +6,6 @@ const cookieParser = require("cookie-parser");
 const uploadRoutes = require("./routes/uploadRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-const { search } = require("./controllers/adminController");
 
 app.use(cors());
 app.use(express.json());
