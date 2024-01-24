@@ -22,8 +22,11 @@ const Pagination = ({
           name: event.target.value,
           batch,
         });
-        setStudentData(data);
-        console.log(data);
+        if (data != "No students found...") {
+          setStudentData(data);
+        } else {
+          setStudentData([]);
+        }
       } catch (error) {
         console.log("error occured in searching");
       }
