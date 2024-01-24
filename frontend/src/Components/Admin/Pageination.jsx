@@ -1,12 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { IoPlayBackSharp, IoPlayForwardSharp } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
+import { searchStudentData } from "./services/Api";
 
-const Pagination = ({ pageCount, currentPage, fetchData, batch }) => {
+const Pagination = ({
+  pageCount,
+  currentPage,
+  fetchData,
+  batch,
+  setStudentData,
+}) => {
   const [pages, setPages] = useState([]);
   const [searchbox, setsearchbox] = useState();
-  
+
   const pagesToDisplay = 5;
+
+  const handleSearch = async (event) => {
+    if (event.target.value) {
+      try {
+        const data = await searchStudentData({
+          name: event.target.value,
+          batch,
+        });
+        setStudentData(data);
+        console.log(data);
+      } catch (error) {
+        console.log("error occured in searching");
+      }
+    } else {
+      fetchData(batch, 1);
+    }
+  };
 
   const buildPagination = (pageIndex) => {
     let newPages = [];
@@ -38,59 +62,58 @@ const Pagination = ({ pageCount, currentPage, fetchData, batch }) => {
   const handleChange = (page) => {
     fetchData(batch, page + 1);
   };
-  console.log(searchbox);  
-  return (<>
-  
-  <div className="absolute left-10 ">
-  <div className="relative ">
-    <input
-      type="text"
-      className="relative h-14 w-[450px] rounded-lg border-gray-200 pl-7 pr-14 text-xl shadow-sm uppercase"
-      placeholder="SEARCH"
-      onChange={(e)=>setsearchbox(e.target.value)}
-    />
-    <span className="absolute inset-y-0 right-0 flex items-center pr-4">
-      <FaSearch />
-    </span>
-  </div>
-</div>
-    <div className="flex gap-4">
-      
-      <button
-        disabled={currentPage === 0}
-        onClick={() => {
-          buildPagination(0), handleChange(0);
-        }}
-        className="grid place-items-center w-35 h-34 p-3 border-2 rounded-xl font-euclid text-14 shadow-md bg-white text-black text-18 cursor-pointer"
-        type="button"
-      >
-        <IoPlayBackSharp />
-      </button>
-      {pages.map((page) => (
+  return (
+    <>
+      <div className="absolute left-10 ">
+        <div className="relative ">
+          <input
+            type="text"
+            className="relative h-14 w-[450px] rounded-lg border-gray-200 pl-7 pr-14 text-xl shadow-sm uppercase"
+            placeholder="SEARCH"
+            onChange={handleSearch}
+          />
+          <span className="absolute inset-y-0 right-0 flex items-center pr-4">
+            <FaSearch />
+          </span>
+        </div>
+      </div>
+      <div className="flex gap-4">
         <button
-          className={`grid place-items-center w-35 h-34 p-3 border-2 rounded-xl font-euclid text-14 shadow-md
-           ${page === currentPage ? "bg-blue-300 text-black" : "bg-white"}`}
+          disabled={currentPage === 0}
           onClick={() => {
-            buildPagination(page), handleChange(page);
+            buildPagination(0), handleChange(0);
           }}
-          key={page}
+          className="grid place-items-center w-35 h-34 p-3 border-2 rounded-xl font-euclid text-14 shadow-md bg-white text-black text-18 cursor-pointer"
           type="button"
         >
-          {page + 1}
+          <IoPlayBackSharp />
         </button>
-      ))}
-      <button
-        disabled={currentPage === pageCount - 1}
-        onClick={() => {
-          buildPagination(pageCount - 1), handleChange(pageCount - 1);
-        }}
-        className="grid place-items-center w-35 h-34 p-3 border-2 rounded-xl font-euclid text-14 shadow-md bg-white text-black text-18 cursor-pointer"
-        type="button"
-      >
-        <IoPlayForwardSharp />
-      </button>
-    </div>
-  </>);
+        {pages.map((page) => (
+          <button
+            className={`grid place-items-center w-35 h-34 p-3 border-2 rounded-xl font-euclid text-14 shadow-md
+           ${page === currentPage ? "bg-blue-300 text-black" : "bg-white"}`}
+            onClick={() => {
+              buildPagination(page), handleChange(page);
+            }}
+            key={page}
+            type="button"
+          >
+            {page + 1}
+          </button>
+        ))}
+        <button
+          disabled={currentPage === pageCount - 1}
+          onClick={() => {
+            buildPagination(pageCount - 1), handleChange(pageCount - 1);
+          }}
+          className="grid place-items-center w-35 h-34 p-3 border-2 rounded-xl font-euclid text-14 shadow-md bg-white text-black text-18 cursor-pointer"
+          type="button"
+        >
+          <IoPlayForwardSharp />
+        </button>
+      </div>
+    </>
+  );
 };
 
 export default Pagination;

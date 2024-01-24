@@ -14,6 +14,18 @@ const fetchStudentData = async (data) => {
   }
 };
 
+const searchStudentData = async (data) => {
+  try {
+    const response = await axios.get(`${baseURL}/students/search`, {
+      params: data,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching student data:", error);
+    throw error;
+  }
+};
+
 const fetchStudentBatches = async () => {
   try {
     const response = await axios.get(`${baseURL}/students/batches`);
@@ -59,7 +71,6 @@ const adminSignUp = async (data) => {
   }
 };
 
-
 export {
   fetchStudentData,
   uploadFile,
@@ -67,4 +78,5 @@ export {
   adminLogin,
   verificationAdmin,
   adminSignUp,
+  searchStudentData,
 };
