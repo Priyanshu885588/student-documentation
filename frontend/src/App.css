@@ -43,6 +43,8 @@ body {
   border-radius: 50%;
   z-index: 2;
 }
+
+
 @keyframes zoom {
   0% {
     transform: scale(0);
@@ -56,6 +58,7 @@ body {
     transform: scale(100);
   }
 }
+
 .upward-move {
   position: absolute;
   background-color: #ff6500;
