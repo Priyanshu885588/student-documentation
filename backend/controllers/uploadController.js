@@ -29,6 +29,7 @@ const uploadExcel = (req, res) => {
       // Insert data into the corresponding table based on the batch
       studentModel.insertStudent(batch, name, admissionCategory);
     }
+    studentModel.createStudentDetailsTable(batch);
 
     res.status(200).json({ message: "Data imported successfully." });
   });

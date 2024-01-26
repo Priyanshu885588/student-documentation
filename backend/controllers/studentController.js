@@ -39,6 +39,7 @@ const getStudentData = async (req, res) => {
 
 const studentAuth = async (req, res) => {
   const { uniqueid, name } = req.body;
+  const batch=req.query;
   if (!uniqueid || !name) {
     return res.status(400).json({
       msg: "Enter unique id and student name",
@@ -52,7 +53,7 @@ const studentAuth = async (req, res) => {
     const data = await db
       .promise()
       .query(
-        "SELECT * FROM student_2026 WHERE name like ? AND unique_Id like ?",
+        `SELECT * FROM student_${batch} WHERE name like ? AND unique_Id like ?`,
         [name, uniqueid]
       );
     console.log(data[0][0]);
