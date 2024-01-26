@@ -175,6 +175,7 @@ export const AdminDashboard = () => {
               fetchData={fetchData}
               batch={batch}
               currentPage={page}
+              setStudentData={setStudentData}
             />
           </div>
 

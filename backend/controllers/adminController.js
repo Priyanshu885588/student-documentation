@@ -4,6 +4,7 @@ const db = require("../db/db");
 const jwt = require("jsonwebtoken");
 const adminModel = require("../models/admin");
 const nodemailer = require("nodemailer");
+
 require("dotenv").config();
 
 const AdminRegister = async (req, res) => {
