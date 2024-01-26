@@ -39,7 +39,42 @@ const insertStudent = (batch, name, admissionCategory) => {
   });
 };
 
+
+const createStudentDetailsTable = (batch)=>{
+
+  const table_name=`student_${batch}_details`
+  const query=`CREATE TABLE IF NOT EXISTS ${table_name}(
+    id VARCHAR(8),
+    name VARCHAR(255),
+    dob date,
+    phoneno VARCHAR(20),
+    branch VARCHAR(4),
+    email VARCHAR(255),
+    gender ENUM('M','F'), 
+    religion VARCHAR(50),
+    caste VARCHAR(50),
+    nationality VARCHAR(50),
+    state VARCHAR(50),
+    address VARCHAR(255),
+    scheme int
+
+    FOREIGN KEY(id) REFERENCES student_${batch}(id),
+    FOREIGN KEY(name) REFERENCES student_${batch}(name)
+
+  )`;
+  
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error(`Error creating ${tableName} table:`, err.message);
+    } else {
+      console.log(`${tableName} table created successfully.`);
+    }
+  });
+
+}
+
 module.exports = {
   createStudentTable,
   insertStudent,
+  createStudentDetailsTable
 };
