@@ -58,9 +58,8 @@ const createStudentDetailsTable = (batch)=>{
     state VARCHAR(50),
     address VARCHAR(255),
     scheme int,
-
-    FOREIGN KEY(id) REFERENCES student_${batch}(id)
-
+    FOREIGN KEY(id) REFERENCES student_${batch}(id),
+    FOREIGN KEY(name) REFERENCES student_${batch}(name)
   )`;
   
   db.query(query, (err, results) => {
