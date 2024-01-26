@@ -4,12 +4,13 @@ const ShortUniqueId = require("short-unique-id");
 const createStudentTable = (batch) => {
   const tableName = `student_${batch}`;
   const query = `CREATE TABLE IF NOT EXISTS ${tableName} (
-      id VARCHAR(8) PRIMARY KEY,
+      id VARCHAR(8) ,
       name VARCHAR(255) NOT NULL,
       admission_category VARCHAR(255) NOT NULL,
       status BIT(1) DEFAULT 0,
       insertion_order INT AUTO_INCREMENT,
-      UNIQUE KEY insertion_order_unique (insertion_order)
+      UNIQUE KEY insertion_order_unique (insertion_order),
+      PRIMARY KEY (id,name)
     )`;
 
   db.query(query, (err, results) => {
@@ -56,18 +57,17 @@ const createStudentDetailsTable = (batch)=>{
     nationality VARCHAR(50),
     state VARCHAR(50),
     address VARCHAR(255),
-    scheme int
+    scheme int,
 
-    FOREIGN KEY(id) REFERENCES student_${batch}(id),
-    FOREIGN KEY(name) REFERENCES student_${batch}(name)
+    FOREIGN KEY(id) REFERENCES student_${batch}(id)
 
   )`;
   
   db.query(query, (err, results) => {
     if (err) {
-      console.error(`Error creating ${tableName} table:`, err.message);
+      console.error(`Error creating ${table_name} table:`, err.message);
     } else {
-      console.log(`${tableName} table created successfully.`);
+      console.log(`${table_name} table created successfully.`);
     }
   });
 

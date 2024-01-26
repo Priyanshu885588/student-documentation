@@ -119,9 +119,25 @@ const search = async (req, res) => {
   }
 };
 
+const uploadStudentInfo = async (req,res)=>{
+  const {id,name,dob,phoneno,branch,email,gender,religion,caste,nationality,state,address,scheme,batch} = req.body
+  if(!id||!name||!dob||!phoneno||!branch||!email||!gender||!religion||!caste||!nationality||!state||!address||!scheme){
+     return res.status(400).json({msg:"please enter the mentioned details"})
+  }
+  try {
+    await db.promise().query(`insert into student_${batch}_details values(?,?,?,?,?,?,?,?,?,?,?,?,?)`,[id,name,dob,phoneno,branch,email,gender,religion,caste,nationality,state,address,scheme])
+    res.status(200).json({msg:"data uploaded successfully!!!"})
+  } catch (error) {
+    res.status(400).json({ msg: "Something went wrong..." });
+  }
+}
+
 module.exports = {
   getStudentData,
   getAllBatches,
   studentAuth,
   search,
+  uploadStudentInfo,
 };
+
+

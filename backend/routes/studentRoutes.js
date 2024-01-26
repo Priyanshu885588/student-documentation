@@ -6,5 +6,6 @@ router.route("/students").get(studentController.getStudentData);
 router.route("/students/search").get(studentController.search);
 router.route("/students/batches").get(studentController.getAllBatches);
 router.route("/login").get(studentController.studentAuth);
+router.route("/uploadinfo").post(studentController.uploadStudentInfo);
 
 module.exports = router;
