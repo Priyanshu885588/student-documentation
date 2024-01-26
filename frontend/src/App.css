@@ -43,7 +43,15 @@ body {
   border-radius: 50%;
   z-index: 2;
 }
-
+.zoom-rev {
+  position: absolute;
+  background-color:  rgba(0, 0, 0, 0.642);
+  width: 10rem;
+  height: 10rem;
+  animation: zoom-reverse 1.5s ease-in-out;
+  border-radius: 50%;
+  z-index: 2;
+}
 
 @keyframes zoom {
   0% {
@@ -58,7 +66,21 @@ body {
     transform: scale(100);
   }
 }
+@keyframes zoom-reverse {
+  0% {
+    transform: scale(100);
+  }
 
+  50% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(0);
+    
+    
+  }
+}
 .upward-move {
   position: absolute;
   background-color: #ff6500;
@@ -76,4 +98,36 @@ body {
   100% {
     bottom: 40%;
   }
+}
+
+.login_box{
+  position:absolute;
+  z-index: 10;
+  width: 384px;
+  background: rgba(0, 0, 0, 0.642);
+  border: 2px solid ;
+  border-color: lightskyblue;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.06);
+ backdrop-filter:  blur(40px) ;
+  color: #fff; 
+  border-radius: 1rem; 
+  padding: 2rem;
+  
+  animation: loginbox 2s  ;
+}
+@keyframes loginbox {
+  0%{
+    opacity: 0;
+    background: transparent;
+}
+ 5%{
+  opacity: 0;
+  background: transparent;
+  
+}
+  100%{
+    opacity: 1;
+   
+  }
+  
 }
