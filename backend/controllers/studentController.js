@@ -1,4 +1,5 @@
 const db = require("../db/db");
+const jwt=require("jsonwebtoken")
 
 const getAllBatches = async (req, res) => {
   try {
@@ -45,9 +46,7 @@ const studentAuth = async (req, res) => {
       msg: "Enter unique id and student name",
     });
   }
-
-  res.cookie("uniqueid", uniqueid);
-  res.cookie("name", name);
+  
 
   try {
     const data = await db
@@ -58,9 +57,13 @@ const studentAuth = async (req, res) => {
       );
     console.log(data[0][0]);
     if (data[0].length > 0) {
-      res.status(400).json({ msg: "Student logged in successfully" });
+      
+      const token = jwt.sign({ uniqueid, name }, process.env.JWT_SECRET);
+      
+      return res.status(400).cookie("authtoken",token).json({ msg: "Student logged in successfully" });
+      
     } else {
-      res.status(400).json({ msg: "Invalid credentials" });
+      return res.status(400).json({ msg: "Invalid credentials" });
     }
   } catch (error) {
     res.status(200).json({
