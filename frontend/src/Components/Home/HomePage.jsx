@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { StartingAnimation } from "../UI/StartingAnimation";
-import Studentlogin from "../Home/Studentlogin"
+import Studentlogin from "../Student/Studentlogin";
 import { LoginAnimation } from "../UI/loginanimation";
-
 
 export const HomePage = () => {
   const [showStartingAnimation, setShowStartingAnimation] = useState(true);
-  const [studentlogin ,setstudentlogin]=useState(false);
-  const loginbuttonclick=()=>{
+  const [studentlogin, setstudentlogin] = useState(false);
+  const loginbuttonclick = () => {
     setstudentlogin(true);
-  }
+  };
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setShowStartingAnimation(false);
@@ -35,18 +34,18 @@ export const HomePage = () => {
       </div>
       <div className="absolute bottom-[40%] h-28 w-28 flex justify-center items-center rounded-full bg-orange-500">
         <div className="h-24 w-24 rnsit-logo "></div>
-      </div  >
+      </div>
       <div className="absolute justify-center items-center w-screen h-screen">
-       
-      {studentlogin && <LoginAnimation/>}
-      
-       </div>
+        {studentlogin && <LoginAnimation />}
+      </div>
       <div className="mb-10">
-        <button className="text-white px-10 py-2 border-2 backdrop-blur-3xl roboto text-lg rounded-full hover:bg-gray-200 hover:text-black transition-all duration-300" onClick={loginbuttonclick} >
+        <button
+          className="text-white px-10 py-2 border-2 backdrop-blur-3xl roboto text-lg rounded-full hover:bg-gray-200 hover:text-black transition-all duration-300"
+          onClick={loginbuttonclick}
+        >
           Login
         </button>
       </div>
-     
     </div>
   );
 };

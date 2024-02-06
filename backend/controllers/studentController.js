@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const jwt=require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 const getAllBatches = async (req, res) => {
   try {
@@ -40,33 +40,30 @@ const getStudentData = async (req, res) => {
 
 const studentAuth = async (req, res) => {
   const { uniqueid, name } = req.body;
-  const batch=req.query;
+  const batch = req.query;
   if (!uniqueid || !name) {
     return res.status(400).json({
       msg: "Enter unique id and student name",
     });
   }
-  
-
   try {
     const data = await db
       .promise()
-      .query(
-        `SELECT * FROM student_${batch} WHERE name like ? AND unique_Id like ?`,
-        [name, uniqueid]
-      );
-    console.log(data[0][0]);
+      .query(`SELECT * FROM student_${batch.batch} WHERE id = ? AND name = ?`, [
+        uniqueid,
+        name,
+      ]);
     if (data[0].length > 0) {
-      
       const token = jwt.sign({ uniqueid, name }, process.env.JWT_SECRET);
-      
-      return res.status(400).cookie("authtoken",token).json({ msg: "Student logged in successfully" });
-      
+
+      return res
+        .status(200)
+        .json({ msg: "Student logged in successfully", token });
     } else {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
   } catch (error) {
-    res.status(200).json({
+    res.status(500).json({
       msg: "Internal Error occured",
     });
   }
@@ -122,18 +119,66 @@ const search = async (req, res) => {
   }
 };
 
-const uploadStudentInfo = async (req,res)=>{
-  const {id,name,dob,phoneno,branch,email,gender,religion,caste,nationality,state,address,scheme,batch} = req.body
-  if(!id||!name||!dob||!phoneno||!branch||!email||!gender||!religion||!caste||!nationality||!state||!address||!scheme){
-     return res.status(400).json({msg:"please enter the mentioned details"})
+const uploadStudentInfo = async (req, res) => {
+  const {
+    id,
+    name,
+    dob,
+    phoneno,
+    branch,
+    email,
+    gender,
+    religion,
+    caste,
+    nationality,
+    state,
+    address,
+    scheme,
+    batch,
+  } = req.body;
+  if (
+    !id ||
+    !name ||
+    !dob ||
+    !phoneno ||
+    !branch ||
+    !email ||
+    !gender ||
+    !religion ||
+    !caste ||
+    !nationality ||
+    !state ||
+    !address ||
+    !scheme
+  ) {
+    return res.status(400).json({ msg: "please enter the mentioned details" });
   }
   try {
-    await db.promise().query(`insert into student_${batch}_details values(?,?,?,?,?,?,?,?,?,?,?,?,?)`,[id,name,dob,phoneno,branch,email,gender,religion,caste,nationality,state,address,scheme])
-    res.status(200).json({msg:"data uploaded successfully!!!"})
+    await db
+      .promise()
+      .query(
+        `insert into student_${batch}_details values(?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+        [
+          id,
+          name,
+          dob,
+          phoneno,
+          branch,
+          email,
+          gender,
+          religion,
+          caste,
+          nationality,
+          state,
+          address,
+          scheme,
+        ]
+      );
+    res.status(200).json({ msg: "data uploaded successfully!!!" });
   } catch (error) {
     res.status(400).json({ msg: "Something went wrong..." });
   }
-}
+};
 
 module.exports = {
   getStudentData,
@@ -142,5 +187,3 @@ module.exports = {
   search,
   uploadStudentInfo,
 };
-
-

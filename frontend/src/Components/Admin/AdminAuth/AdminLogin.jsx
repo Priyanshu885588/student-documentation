@@ -27,7 +27,7 @@ export const AdminLogin = () => {
       const result = await adminLogin(data);
       const { token, message } = result;
       toast.error(message);
-      localStorage.setItem("token", token);
+      localStorage.setItem("admintoken", token);
       navigate("/admin/dashboard");
     } catch (error) {
       if (error.response) {

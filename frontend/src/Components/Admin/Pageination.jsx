@@ -66,12 +66,12 @@ const Pagination = ({
     fetchData(batch, page + 1);
   };
   return (
-    <>
-      <div className="absolute left-10 ">
+    <div className="flex justify-center">
+      <div className="absolute left-10">
         <div className="relative ">
           <input
             type="text"
-            className="relative h-14 w-[450px] rounded-lg border-gray-200 pl-7 pr-14 text-xl shadow-sm uppercase"
+            className="relative h-14 w-[400px] rounded-lg border-gray-200 pl-7 pr-14 text-xl shadow-sm uppercase"
             placeholder="SEARCH"
             onChange={handleSearch}
           />
@@ -115,7 +115,7 @@ const Pagination = ({
           <IoPlayForwardSharp />
         </button>
       </div>
-    </>
+    </div>
   );
 };
 
