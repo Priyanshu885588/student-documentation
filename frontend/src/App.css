@@ -46,10 +46,10 @@ body {
 .zoom-rev {
   position: absolute;
   background-color:  rgba(0, 0, 0, 0.642);
-  width: 10rem;
-  height: 10rem;
+  width: 8rem;
+  height: 9.5rem;
   animation: zoom-reverse 1.5s ease-in-out;
-  border-radius: 50%;
+  border-radius: 8px;
   z-index: 2;
 }
 
@@ -72,11 +72,11 @@ body {
   }
 
   50% {
-    transform: scale(0);
+    transform: scale(3);
   }
 
   100% {
-    transform: scale(0);
+    transform: scale(3);
     
     
   }

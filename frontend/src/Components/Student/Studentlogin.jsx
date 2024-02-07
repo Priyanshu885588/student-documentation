@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { LoginAnimation } from "../UI/loginanimation";
 import { studentLogin } from "./Services/Services";
 import { useNavigate } from "react-router-dom";
-
+import { MdDateRange } from "react-icons/md";
 import { FaRegAddressCard } from "react-icons/fa";
 import { HiOutlineUserCircle } from "react-icons/hi";
 
@@ -23,6 +23,7 @@ export const Login = () => {
     }
   };
   return (
+   
     <div className="login_box">
       <form onSubmit={handleStudentLogin}>
         <h1 className="text-3xl text-center">Login</h1>
@@ -57,7 +58,7 @@ export const Login = () => {
             required
             onChange={(e) => setBatch(e.target.value.trim())}
           />
-          <FaRegAddressCard className="absolute right-[20px] top-1/2 transform -translate-y-1/2 text-base" />
+          <MdDateRange className="absolute right-[20px] top-1/2 transform -translate-y-1/2 text-base" />
         </div>
         <button
           type="submit"
@@ -67,6 +68,7 @@ export const Login = () => {
         </button>
       </form>
     </div>
+    
   );
 };
 
