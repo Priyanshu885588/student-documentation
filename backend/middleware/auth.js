@@ -19,10 +19,11 @@ const authenticationMiddleware = async (req, res, next) => {
 };
 
 const studentAuthMiddlware= async (req,res,next)=>{
-  const token=req.cookies.authtoken;
+  const token=req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+   return  res.status(400).send({ msg: "No token provided" });
+  }
 
-  if (!token)
-      console.log("no token in cookies");
   try{
     const decoded=jwt.verify(token,process.env.JWT_SECRET);
     next();
