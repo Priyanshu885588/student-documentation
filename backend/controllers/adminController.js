@@ -4,6 +4,8 @@ const db = require("../db/db");
 const jwt = require("jsonwebtoken");
 const adminModel = require("../models/admin");
 const nodemailer = require("nodemailer");
+const ExcelJS = require('exceljs');
+const fs = require('fs');
 
 require("dotenv").config();
 
@@ -184,4 +186,43 @@ try {
 }
 }
 
-module.exports = { AdminRegister, AdminLogin, sendVerificationCode,search };
+const downloadStudentsInfo = async (req, res) => {
+  const { batch } = req.query;
+  try {
+      const student_details = await db.promise().query(`
+          SELECT *
+          FROM student_${batch}
+          LEFT JOIN student_${batch}_details ON student_${batch}.id = student_${batch}_details.id;
+      `);
+
+      // Create a new Excel workbook
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Student Details');
+
+      // Add column headers to the worksheet
+      const columns = [];
+      student_details[1].forEach(column => {
+          columns.push({ header: column.name, key: column.name, width: 20 });
+      });
+      worksheet.columns = columns;
+
+      // Add data rows to the worksheet
+      student_details[0].forEach(row => {
+          worksheet.addRow(row);
+      });
+
+      // Generate a unique filename for the Excel file
+      const filename = `student_details_${batch}.xlsx`;
+      const filePath = `excel/${filename}`; // Specify the directory where you want to store the file
+
+      // Write the Excel file to the specified directory
+      await workbook.xlsx.writeFile(filePath);
+
+      res.status(200).json({ filename }); // Send the filename in the response
+  } catch (error) {
+      res.status(400).json(error);
+  }
+};
+
+
+module.exports = { AdminRegister, AdminLogin, sendVerificationCode,search,downloadStudentsInfo };
