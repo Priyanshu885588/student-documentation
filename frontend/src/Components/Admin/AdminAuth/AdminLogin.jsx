@@ -43,7 +43,7 @@ export const AdminLogin = () => {
   };
   useEffect(() => {
     const handleLogout = () => {
-      localStorage.removeItem("token");
+      localStorage.removeItem("admintoken");
     };
     handleLogout();
   }, []);

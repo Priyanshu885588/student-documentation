@@ -13,7 +13,7 @@ export const VerticalNavbar = () => {
     setDrawerOpen(!isDrawerOpen);
   };
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("admintoken");
     navigate("/admin");
   };
 

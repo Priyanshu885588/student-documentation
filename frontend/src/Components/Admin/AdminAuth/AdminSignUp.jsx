@@ -22,7 +22,7 @@ export const AdminSignUp = ({ toggleSignUp }) => {
   const [password, setPassword] = useState("");
   useEffect(() => {
     const handleLogout = () => {
-      localStorage.removeItem("token");
+      localStorage.removeItem("admintoken");
     };
     handleLogout();
   }, []);
