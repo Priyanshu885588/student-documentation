@@ -18,14 +18,11 @@ export const HomePage = () => {
     const timeoutId = setTimeout(() => {
       setShowStartingAnimation(false);
     }, 2000);
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  useEffect(() => {
     const handleLogout = () => {
       localStorage.removeItem("studentToken");
     };
     handleLogout();
+    return () => clearTimeout(timeoutId);
   }, []);
 
   return showStartingAnimation ? (

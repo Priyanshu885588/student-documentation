@@ -39,6 +39,10 @@ export const Login = () => {
   };
 
   useEffect(() => {
+    const handleLogout = () => {
+      localStorage.removeItem("studentToken");
+    };
+    handleLogout();
     const fetchBatches = async () => {
       try {
         setIsLoading(true);
@@ -59,13 +63,6 @@ export const Login = () => {
     };
 
     fetchBatches();
-  }, []);
-
-  useEffect(() => {
-    const handleLogout = () => {
-      localStorage.removeItem("studentToken");
-    };
-    handleLogout();
   }, []);
 
   return (
