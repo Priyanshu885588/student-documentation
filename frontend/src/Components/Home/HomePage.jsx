@@ -8,21 +8,24 @@ export const HomePage = () => {
   const [studentlogin, setstudentlogin] = useState(false);
   const [style, setStyle] = useState("opacity=1");
   const changeStyle = () => {
-   
-     setStyle("opacity=0");
-};
+    setStyle("opacity=0");
+  };
   const loginbuttonclick = () => {
-   
     changeStyle();
     setstudentlogin(true);
-    
-
   };
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setShowStartingAnimation(false);
     }, 2000);
     return () => clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    const handleLogout = () => {
+      localStorage.removeItem("studentToken");
+    };
+    handleLogout();
   }, []);
 
   return showStartingAnimation ? (
@@ -50,8 +53,7 @@ export const HomePage = () => {
       <div className="mb-10">
         <button
           className="text-white px-10 py-2 border-2 backdrop-blur-3xl roboto text-lg rounded-full hover:bg-gray-200 :text-black transition-all duration-300  "
-          onClick={loginbuttonclick  } 
-          
+          onClick={loginbuttonclick}
         >
           Login
         </button>
