@@ -46,20 +46,28 @@ const createStudentDetailsTable = (batch)=>{
   const table_name=`student_${batch}_details`
   const query=`CREATE TABLE IF NOT EXISTS ${table_name}(
     id VARCHAR(8),
-    name VARCHAR(255),
-    dob date,
-    phoneno VARCHAR(20),
-    branch VARCHAR(4),
+    First_name VARCHAR(255),
+    Last_name VARCHAR(255),
     email VARCHAR(255),
-    gender ENUM('M','F'), 
-    religion VARCHAR(50),
-    caste VARCHAR(50),
-    nationality VARCHAR(50),
-    state VARCHAR(50),
-    address VARCHAR(255),
-    scheme int,
+    Phone_Number VARCHAR(255),
+    Aadhar_Number VARCHAR(255),
+    Gender VARCHAR(255), 
+    date_of_birth date,
+    current_address VARCHAR(255),
+    Permanent_address VARCHAR(255),
+    religion VARCHAR(255),
+    category VARCHAR(255),
+    nationality VARCHAR(255),
+    state VARCHAR(255),
+    branch VARCHAR(255),
+    admission_quota VARCHAR(255),
+    registration_number_10th VARCHAR(255),
+    passing_year_10th VARCHAR(255),
+    school_name_10th VARCHAR(255),
+    PUC_registration_Number VARCHAR(255),
+    PUC_Passing_Number VARCHAR(255),
+    PUC_college_name VARCHAR(255),
     FOREIGN KEY(id) REFERENCES student_${batch}(id),
-    FOREIGN KEY(name) REFERENCES student_${batch}(name)
   )`;
   
   db.query(query, (err, results) => {
@@ -77,3 +85,29 @@ module.exports = {
   insertStudent,
   createStudentDetailsTable
 };
+
+
+
+// {
+//   "First_name": "Priyanshu",
+//   "Last_name": "Mandani",
+//   "email": "priyanshumandani978@gmail.com",
+//   "Phone_Number": "9313032978",
+//   "Aadhar_Number": "898988889898",
+//   "Gender": "Male",
+//   "date_of_birth": "2003-11-20",
+//   "current_address": "RR nagar,channsandra road",
+//   "Permanent_address": "RR nagar,channsandra road",
+//   "religion": "HINDU",
+//   "category": "PATEL",
+//   "nationality": "INDIAN",
+//   "state": "KARNATAKA",
+//   "branch": "Computer Engineering",
+//   "admission_quota": "COMEDK",
+//   "registration_number_10th": "ttsgs",
+//   "passing_year_10th": "2019",
+//   "school_name_10th": "SSMS",
+//   "PUC_registration_Number": "sfdfs",
+//   "PUC_Passing_Number": "2021",
+//   "PUC_college_name": "SSMS"
+// }
