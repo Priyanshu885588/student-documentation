@@ -25,6 +25,14 @@ export const HomePage = () => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  if (studentlogin) {
+    return (
+      <div className="absolute justify-center items-center w-screen h-screen">
+        <LoginAnimation />
+      </div>
+    );
+  }
+
   return showStartingAnimation ? (
     <StartingAnimation />
   ) : (
@@ -44,13 +52,11 @@ export const HomePage = () => {
       <div className="absolute bottom-[40%] h-28 w-28 flex justify-center items-center rounded-full bg-orange-500">
         <div className="h-24 w-24 rnsit-logo "></div>
       </div>
-      <div className="absolute justify-center items-center w-screen h-screen">
-        {studentlogin && <LoginAnimation />}
-      </div>
-      <div className="mb-48">
+
+      <div className="mb-20">
         <button
           className="text-white px-10 py-2 border-2 backdrop-blur-3xl roboto text-lg rounded-full hover:bg-gray-200 hover:text-black transition-all duration-300"
-          onClick={loginbuttonclick} 
+          onClick={loginbuttonclick}
         >
           Login
         </button>
