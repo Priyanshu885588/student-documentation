@@ -1,0 +1,37 @@
+import * as Yup from "yup";
+
+export const studentDetailsSchema = Yup.object({
+  First_name: Yup.string().required("First name is required"),
+  Last_name: Yup.string().required("Last name is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  Phone_Number: Yup.string()
+    .matches(/^\d+$/, "Phone number must be numeric")
+    .required("Phone number is required"),
+  Aadhar_Number: Yup.string()
+    .matches(/^\d{12}$/, "Aadhar number must be exactly 12 numeric digits")
+    .required("Aadhar number is required"),
+  Gender: Yup.string().required("Gender is required"),
+  date_of_birth: Yup.date().required("Date of birth is required"),
+  current_address: Yup.string().required("Current address is required"),
+  Permanent_address: Yup.string().required("Permanent address is required"),
+  religion: Yup.string().required("Religion is required"),
+  category: Yup.string().required("Category is required"),
+  nationality: Yup.string().required("Nationality is required"),
+  state: Yup.string().required("State is required"),
+  branch: Yup.string().required("Branch is required"),
+  admission_quota: Yup.string().required("Admission quota is required"),
+  registration_number_10th: Yup.string().required(
+    "Registration number (10th) is required"
+  ),
+  passing_year_10th: Yup.string().required("Passing year (10th) is required"),
+  school_name_10th: Yup.string().required("School name (10th) is required"),
+  PUC_registration_Number: Yup.string().required(
+    "PUC/Diploma registration number is required"
+  ),
+  PUC_Passing_Number: Yup.string().required(
+    "PUC/Diploma passing number is required"
+  ),
+  PUC_college_name: Yup.string().required(
+    "PUC/Diploma college name is required"
+  ),
+});

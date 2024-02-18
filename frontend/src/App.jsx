@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { AdminPage } from "./Components/Admin/AdminPage";
 import { HomePage } from "./Components/Home/HomePage";
-import { StudentDetailsForm } from "./Components/Student/StudentDetailsForm";
+import StudentDetailsForm from "./Components/Student/StudentDetailsForm";
 import { StudentDocuments } from "./Components/Student/StudentDocuments";
 import { PrivateRoute } from "./Components/Student/PrivateRoute";
 function App() {
