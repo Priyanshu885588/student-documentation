@@ -38,16 +38,16 @@ const StudentDetailsForm = () => {
     });
   return (
     <div className="bg-white">
-      <div className="bg-zinc-500 text-white py-4">
+      <div className="bg-cyan-900 text-white py-4">
         <h1 className="text-3xl font-bold text-center">STUDENT INFORMATION</h1>
       </div>
 
       <form
-        className="mx-36  p-5 px-16 bg-slate-100 "
+        className="mx-36 p-5 px-16"
         onSubmit={handleSubmit}
         autoComplete="off"
       >
-        <div className="bg-yellow-300 text-white py-4 text-center my-5  max-w-4xl mx-auto">
+        <div className="bg-yellow-200 text-white py-4 text-center my-5  max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-LEFT text-black mx-10">
             Personal Details
           </h1>
@@ -328,7 +328,7 @@ const StudentDetailsForm = () => {
           </div>
         </div>
 
-        <div className="bg-yellow-300 text-white py-4 text-center my-5  max-w-4xl mx-auto">
+        <div className="bg-yellow-200 text-white py-4 text-center my-5  max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-LEFT text-black mx-10">
             Acamadic Details
           </h1>
