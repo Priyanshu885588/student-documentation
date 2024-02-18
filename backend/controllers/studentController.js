@@ -6,7 +6,7 @@ const getAllBatches = async (req, res) => {
     const [rows] = await db
       .promise()
       .query(
-        "SELECT table_name FROM information_schema.tables WHERE table_name LIKE 'student_%'"
+        `SELECT table_name FROM information_schema.tables WHERE table_name LIKE 'student\\_%' AND table_name NOT LIKE 'student\\_%\\_%'`
       );
     const batches = rows.map((row) => row.TABLE_NAME.replace("student_", ""));
 
@@ -120,55 +120,55 @@ const search = async (req, res) => {
 };
 
 const uploadStudentInfo = async (req, res) => {
-  const {uniqueid} = req.user
+  const { uniqueid } = req.user;
 
-  const {     
-    First_name ,
-    Last_name ,
-    email ,
-    Phone_Number ,
-    Aadhar_Number ,
-    Gender , 
-    date_of_birth, 
-    current_address ,
+  const {
+    First_name,
+    Last_name,
+    email,
+    Phone_Number,
+    Aadhar_Number,
+    Gender,
+    date_of_birth,
+    current_address,
     Permanent_address,
-    religion ,
-    category ,
-    nationality ,
-    state ,
-    branch ,
-    admission_quota ,
+    religion,
+    category,
+    nationality,
+    state,
+    branch,
+    admission_quota,
     registration_number_10th,
-    passing_year_10th ,
-    school_name_10th ,
+    passing_year_10th,
+    school_name_10th,
     PUC_registration_Number,
     PUC_Passing_Number,
     PUC_college_name,
-    batch
+    batch,
   } = req.body;
   if (
-    !uniqueid ||    
+    !uniqueid ||
     !First_name ||
     !Last_name ||
-    !email||
+    !email ||
     !Phone_Number ||
     !Aadhar_Number ||
-    !Gender  ||
+    !Gender ||
     !date_of_birth ||
-    !current_address||
-    !Permanent_address||
-    !religion|| 
+    !current_address ||
+    !Permanent_address ||
+    !religion ||
     !category ||
     !nationality ||
     !state ||
     !branch ||
-    !admission_quota|| 
-    !registration_number_10th||
+    !admission_quota ||
+    !registration_number_10th ||
     !passing_year_10th ||
     !school_name_10th ||
-    !PUC_registration_Number||
-    !PUC_Passing_Number||
-   ! PUC_college_name
+    !PUC_registration_Number ||
+    !PUC_Passing_Number ||
+    !PUC_college_name
   ) {
     return res.status(400).json({ msg: "please enter the mentioned details" });
   }
@@ -178,25 +178,25 @@ const uploadStudentInfo = async (req, res) => {
       .query(
         `insert into student_${batch}_details values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
         [
-          uniqueid,     
-          First_name ,
-          Last_name ,
-          email ,
-          Phone_Number ,
-          Aadhar_Number ,
-          Gender , 
-          date_of_birth, 
-          current_address ,
+          uniqueid,
+          First_name,
+          Last_name,
+          email,
+          Phone_Number,
+          Aadhar_Number,
+          Gender,
+          date_of_birth,
+          current_address,
           Permanent_address,
-          religion ,
-          category ,
-          nationality ,
-          state ,
-          branch ,
-          admission_quota ,
+          religion,
+          category,
+          nationality,
+          state,
+          branch,
+          admission_quota,
           registration_number_10th,
-          passing_year_10th ,
-          school_name_10th ,
+          passing_year_10th,
+          school_name_10th,
           PUC_registration_Number,
           PUC_Passing_Number,
           PUC_college_name,
@@ -204,7 +204,7 @@ const uploadStudentInfo = async (req, res) => {
       );
     res.status(200).json({ msg: "data uploaded successfully!!!" });
   } catch (error) {
-    res.status(400).json({ msg: "Something went wrong..." ,error});
+    res.status(400).json({ msg: "Something went wrong...", error });
   }
 };
 

@@ -11,7 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/" element={<PrivateRoute />}>
-          <Route path="/detailsForm" element={<StudentDetailsForm />} />
+          <Route path="/detailsForm/:batch" element={<StudentDetailsForm />} />
           <Route path="/documentsForm" element={<StudentDocuments />} />
         </Route>
         <Route path="/admin/*" element={<AdminPage />} />

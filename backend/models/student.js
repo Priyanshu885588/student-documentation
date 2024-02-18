@@ -40,11 +40,9 @@ const insertStudent = (batch, name, admissionCategory) => {
   });
 };
 
-
-const createStudentDetailsTable = (batch)=>{
-
-  const table_name=`student_${batch}_details`
-  const query=`CREATE TABLE IF NOT EXISTS ${table_name}(
+const createStudentDetailsTable = (batch) => {
+  const table_name = `student_${batch}_details`;
+  const query = `CREATE TABLE IF NOT EXISTS ${table_name}(
     id VARCHAR(8),
     First_name VARCHAR(255),
     Last_name VARCHAR(255),
@@ -67,9 +65,9 @@ const createStudentDetailsTable = (batch)=>{
     PUC_registration_Number VARCHAR(255),
     PUC_Passing_Number VARCHAR(255),
     PUC_college_name VARCHAR(255),
-    FOREIGN KEY(id) REFERENCES student_${batch}(id),
-  )`;
-  
+    FOREIGN KEY(id) REFERENCES student_${batch}(id)
+  );`;
+
   db.query(query, (err, results) => {
     if (err) {
       console.error(`Error creating ${table_name} table:`, err.message);
@@ -77,16 +75,13 @@ const createStudentDetailsTable = (batch)=>{
       console.log(`${table_name} table created successfully.`);
     }
   });
-
-}
+};
 
 module.exports = {
   createStudentTable,
   insertStudent,
-  createStudentDetailsTable
+  createStudentDetailsTable,
 };
-
-
 
 // {
 //   "First_name": "Priyanshu",

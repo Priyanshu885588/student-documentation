@@ -2,8 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { studentDetailsSchema } from "./Schemas";
+import { studentDetailsUpload } from "./Services/Services";
+import { useParams } from "react-router-dom";
 
 const StudentDetailsForm = () => {
+  const { batch } = useParams();
   const initialValues = {
     First_name: "",
     Last_name: "",
@@ -27,13 +30,13 @@ const StudentDetailsForm = () => {
     PUC_Passing_Number: "",
     PUC_college_name: "",
   };
-
   const { values, errors, touched, handleSubmit, handleBlur, handleChange } =
     useFormik({
       initialValues: initialValues,
       validationSchema: studentDetailsSchema,
       onSubmit: async (values) => {
-        console.log(values);
+        const data = await studentDetailsUpload({ ...values, batch });
+        console.log(data);
       },
     });
   return (

@@ -53,7 +53,7 @@ export const AdminSignUp = ({ toggleSignUp }) => {
           Password: password,
         });
         const { token, message } = data;
-        localStorage.setItem("token", token);
+        localStorage.setItem("admintoken", token);
         navigate("/admin/dashboard");
       } catch (error) {
         if (error.response) {

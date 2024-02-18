@@ -11,4 +11,18 @@ const studentLogin = async (data, batch) => {
   }
 };
 
-export { studentLogin };
+const studentDetailsUpload = async (data) => {
+  try {
+    const token = localStorage.getItem("studentToken");
+    const config = {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(`${baseURL}/uploadinfo`, data, config);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export { studentLogin, studentDetailsUpload };
