@@ -71,7 +71,7 @@ const Pagination = ({
         <div className="relative ">
           <input
             type="text"
-            className="relative h-14 w-[400px] rounded-lg border-gray-200 pl-7 pr-14 text-xl shadow-sm uppercase"
+            className="relative h-14 w-[350px] rounded-lg border-gray-200 pl-7 pr-14 text-xl shadow-sm uppercase"
             placeholder="SEARCH"
             onChange={handleSearch}
           />
