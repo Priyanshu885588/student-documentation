@@ -47,10 +47,10 @@ export const HomePage = () => {
       <div className="absolute justify-center items-center w-screen h-screen">
         {studentlogin && <LoginAnimation />}
       </div>
-      <div className="mb-10">
+      <div className="mb-48">
         <button
-          className="text-white px-10 py-2 border-2 backdrop-blur-3xl roboto text-lg rounded-full hover:bg-gray-200 :text-black transition-all duration-300  "
-          onClick={loginbuttonclick}
+          className="text-white px-10 py-2 border-2 backdrop-blur-3xl roboto text-lg rounded-full hover:bg-gray-200 hover:text-black transition-all duration-300"
+          onClick={loginbuttonclick} 
         >
           Login
         </button>
