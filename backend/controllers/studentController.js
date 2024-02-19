@@ -208,10 +208,24 @@ const uploadStudentInfo = async (req, res) => {
   }
 };
 
+const getStudentDetails = async (req, res) => {
+  const { uniqueid } = req.user;
+  const { batch } = req.query;
+  try {
+    const data = await db
+      .promise()
+      .query(`select * from student_${batch}_details where id = ?`, [uniqueid]);
+    const studentdetails = data[0][0];
+    res.status(200).json(studentdetails);
+  } catch (error) {
+    res.status(400).json({ msg: "Something went wrong...", error });
+  }
+};
 module.exports = {
   getStudentData,
   getAllBatches,
   studentAuth,
   search,
   uploadStudentInfo,
+  getStudentDetails,
 };

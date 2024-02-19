@@ -91,12 +91,12 @@ export const StudentDocuments = () => {
                 <span className="text-base font-medium text-black">
                   Progress
                 </span>
-                <span className="text-sm font-medium text-black ">2 of 2</span>
+                <span className="text-sm font-medium text-black ">1 of 2</span>
               </div>
               <div className="w-2/3 bg-gray-200 rounded-full h-2.5  dark:bg-gray-700">
                 <div
                   className="bg-green-400 h-2.5 rounded-full"
-                  style={{ width: "100%" }}
+                  style={{ width: "50%" }}
                 ></div>
               </div>
             </div>

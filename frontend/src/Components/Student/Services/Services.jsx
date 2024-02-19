@@ -25,4 +25,22 @@ const studentDetailsUpload = async (data) => {
     throw error;
   }
 };
-export { studentLogin, studentDetailsUpload };
+
+const getStudentDetails = async (batch) => {
+  try {
+    const token = localStorage.getItem("studentToken");
+    const config = {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(
+      `${baseURL}/getStudentinfo?batch=${batch}`,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export { studentLogin, studentDetailsUpload, getStudentDetails };

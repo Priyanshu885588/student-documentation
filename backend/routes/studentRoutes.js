@@ -8,4 +8,8 @@ router
   .route("/uploadinfo")
   .post(auth.studentAuthMiddlware, studentController.uploadStudentInfo);
 
+router
+  .route("/getStudentinfo")
+  .get(auth.studentAuthMiddlware, studentController.getStudentDetails);
+
 module.exports = router;

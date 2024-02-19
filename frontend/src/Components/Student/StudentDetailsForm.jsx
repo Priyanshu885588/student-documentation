@@ -1,44 +1,92 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { studentDetailsSchema } from "./Schemas";
-import { studentDetailsUpload } from "./Services/Services";
+import { getStudentDetails, studentDetailsUpload } from "./Services/Services";
 import { useParams } from "react-router-dom";
 
 const StudentDetailsForm = () => {
   const { batch } = useParams();
-  const initialValues = {
-    First_name: "",
-    Last_name: "",
-    email: "",
-    Phone_Number: "",
-    Aadhar_Number: "",
-    Gender: "",
-    date_of_birth: "",
-    current_address: "",
-    Permanent_address: "",
-    religion: "",
-    category: "",
-    nationality: "",
-    state: "",
-    branch: "",
-    admission_quota: "",
-    registration_number_10th: "",
-    passing_year_10th: "",
-    school_name_10th: "",
-    PUC_registration_Number: "",
-    PUC_Passing_Number: "",
-    PUC_college_name: "",
-  };
+  const [studentData, setStudentData] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const initialValues = studentData
+    ? {
+        First_name: studentData.First_name || "",
+        Last_name: studentData.Last_name || "",
+        email: studentData.email || "",
+        Phone_Number: studentData.Phone_Number || "",
+        Aadhar_Number: studentData.Aadhar_Number || "",
+        Gender: studentData.Gender || "",
+        date_of_birth: studentData.date_of_birth || "",
+        current_address: studentData.current_address || "",
+        Permanent_address: studentData.Permanent_address || "",
+        religion: studentData.religion || "",
+        category: studentData.category || "",
+        nationality: studentData.nationality || "",
+        state: studentData.state || "",
+        branch: studentData.branch || "",
+        admission_quota: studentData.admission_quota || "",
+        registration_number_10th: studentData.registration_number_10th || "",
+        passing_year_10th: studentData.passing_year_10th || "",
+        school_name_10th: studentData.school_name_10th || "",
+        PUC_registration_Number: studentData.PUC_registration_Number || "",
+        PUC_Passing_Number: studentData.PUC_Passing_Number || "",
+        PUC_college_name: studentData.PUC_college_name || "",
+      }
+    : {
+        First_name: "",
+        Last_name: "",
+        email: "",
+        Phone_Number: "",
+        Aadhar_Number: "",
+        Gender: "",
+        date_of_birth: "",
+        current_address: "",
+        Permanent_address: "",
+        religion: "",
+        category: "",
+        nationality: "",
+        state: "",
+        branch: "",
+        admission_quota: "",
+        registration_number_10th: "",
+        passing_year_10th: "",
+        school_name_10th: "",
+        PUC_registration_Number: "",
+        PUC_Passing_Number: "",
+        PUC_college_name: "",
+      };
+
   const { values, errors, touched, handleSubmit, handleBlur, handleChange } =
     useFormik({
       initialValues: initialValues,
       validationSchema: studentDetailsSchema,
       onSubmit: async (values) => {
         const data = await studentDetailsUpload({ ...values, batch });
-        console.log(data);
+        fetchStudentDetails();
       },
     });
+  const fetchStudentDetails = async () => {
+    try {
+      setLoading(true);
+      const data = await getStudentDetails(batch);
+      setStudentData(data);
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchStudentDetails();
+  }, []);
+
+  if (loading) {
+    return <div>loading....</div>;
+  }
+
   return (
     <div className="bg-white">
       <div className="bg-cyan-900 text-white py-4">
@@ -59,7 +107,7 @@ const StudentDetailsForm = () => {
         <div className="grid md:grid-cols-2 md:gap-24 max-w-4xl  mx-auto ">
           <div className="relative z-0 w-full mb-5 group ">
             <input
-              value={values.First_name}
+              value={initialValues.First_name || values.First_name}
               onChange={handleChange}
               onBlur={handleBlur}
               name="First_name"
@@ -71,7 +119,8 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               First name
             </label>
-            {errors.First_name && touched.First_name ? (
+
+            {errors.First_name && !studentData && touched.First_name ? (
               <p className="text-red-400 opacity-80 mt-1 text-sm">
                 {errors.First_name}
               </p>
@@ -79,7 +128,7 @@ const StudentDetailsForm = () => {
           </div>
           <div className="relative z-0 w-full mb-5 group">
             <input
-              value={values.Last_name}
+              value={initialValues.Last_name || values.Last_name}
               onChange={handleChange}
               onBlur={handleBlur}
               name="Last_name"
@@ -91,7 +140,7 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Last name
             </label>
-            {errors.Last_name && touched.Last_name ? (
+            {errors.Last_name && !studentData && touched.Last_name ? (
               <p className="text-red-400 opacity-80 mt-1 text-sm">
                 {errors.Last_name}
               </p>
@@ -101,7 +150,7 @@ const StudentDetailsForm = () => {
 
         <div className="relative z-0 w-full mb-5 group max-w-4xl mx-auto">
           <input
-            value={values.email}
+            value={initialValues.email || values.email}
             onChange={handleChange}
             onBlur={handleBlur}
             name="email"
@@ -113,7 +162,7 @@ const StudentDetailsForm = () => {
           <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             Email address
           </label>
-          {errors.email && touched.email ? (
+          {errors.email && !studentData && touched.email ? (
             <p className="text-red-400 opacity-80 mt-1 text-sm">
               {errors.email}
             </p>
@@ -123,7 +172,7 @@ const StudentDetailsForm = () => {
         <div className="grid md:grid-cols-2 md:gap-24 max-w-4xl  mx-auto ">
           <div className="relative z-0 w-full mb-5 group ">
             <input
-              value={values.Phone_Number}
+              value={initialValues.Phone_Number || values.Phone_Number}
               onChange={handleChange}
               onBlur={handleBlur}
               name="Phone_Number"
@@ -135,7 +184,7 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Phone Number
             </label>
-            {errors.Phone_Number && touched.Phone_Number ? (
+            {errors.Phone_Number && !studentData && touched.Phone_Number ? (
               <p className="text-red-400 opacity-80 mt-1 text-sm">
                 {errors.Phone_Number}
               </p>
@@ -143,7 +192,7 @@ const StudentDetailsForm = () => {
           </div>
           <div className="relative z-0 w-full mb-5 group ">
             <input
-              value={values.Aadhar_Number}
+              value={initialValues.Aadhar_Number || values.Aadhar_Number}
               onChange={handleChange}
               onBlur={handleBlur}
               name="Aadhar_Number"
@@ -155,7 +204,7 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Aadhar Number
             </label>
-            {errors.Aadhar_Number && touched.Aadhar_Number ? (
+            {errors.Aadhar_Number && !studentData && touched.Aadhar_Number ? (
               <p className="text-red-400 opacity-80 mt-1 text-sm">
                 {errors.Aadhar_Number}
               </p>
@@ -169,7 +218,7 @@ const StudentDetailsForm = () => {
             </label>
             <select
               name="Gender"
-              value={values.Gender}
+              value={initialValues.Gender || values.Gender}
               onChange={handleChange}
               onBlur={handleBlur}
               className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 ml-2 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -178,7 +227,7 @@ const StudentDetailsForm = () => {
               <option>Male</option>
               <option>Female</option>
             </select>
-            {errors.Gender && touched.Gender ? (
+            {errors.Gender && !studentData && touched.Gender ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.Gender}
               </p>
@@ -190,7 +239,7 @@ const StudentDetailsForm = () => {
             </label>
             <input
               type="date"
-              value={values.date_of_birth}
+              value={initialValues.date_of_birth || values.date_of_birth}
               onChange={handleChange}
               onBlur={handleBlur}
               name="date_of_birth"
@@ -198,7 +247,7 @@ const StudentDetailsForm = () => {
               autoComplete="off"
               className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-72 p-2 ml-2 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
-            {errors.date_of_birth && touched.date_of_birth ? (
+            {errors.date_of_birth && !studentData && touched.date_of_birth ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.date_of_birth}
               </p>
@@ -207,7 +256,7 @@ const StudentDetailsForm = () => {
         </div>
         <div className="relative z-0 w-full mb-5 group max-w-4xl mx-auto">
           <input
-            value={values.current_address}
+            value={initialValues.current_address || values.current_address}
             onChange={handleChange}
             onBlur={handleBlur}
             type="text"
@@ -219,7 +268,7 @@ const StudentDetailsForm = () => {
           <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             Current address
           </label>
-          {errors.current_address && touched.current_address ? (
+          {errors.current_address && !studentData && touched.current_address ? (
             <p className="text-red-400 opacity-80 m-1 text-sm">
               {errors.current_address}
             </p>
@@ -229,7 +278,7 @@ const StudentDetailsForm = () => {
           <input
             type="text"
             name="Permanent_address"
-            value={values.Permanent_address}
+            value={initialValues.Permanent_address || values.Permanent_address}
             onChange={handleChange}
             onBlur={handleBlur}
             autoComplete="off"
@@ -239,7 +288,9 @@ const StudentDetailsForm = () => {
           <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             Permanent address
           </label>
-          {errors.Permanent_address && touched.Permanent_address ? (
+          {errors.Permanent_address &&
+          !studentData &&
+          touched.Permanent_address ? (
             <p className="text-red-400 opacity-80 m-1 text-sm">
               {errors.Permanent_address}
             </p>
@@ -249,7 +300,7 @@ const StudentDetailsForm = () => {
         <div className="grid md:grid-cols-2 md:gap-24 max-w-4xl  mx-auto ">
           <div className="relative z-0 w-full mb-5 group ">
             <input
-              value={values.religion}
+              value={initialValues.religion || values.religion}
               onChange={handleChange}
               onBlur={handleBlur}
               type="text"
@@ -261,7 +312,7 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Religion
             </label>
-            {errors.religion && touched.religion ? (
+            {errors.religion && !studentData && touched.religion ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.religion}
               </p>
@@ -269,7 +320,7 @@ const StudentDetailsForm = () => {
           </div>
           <div className="relative z-0 w-full mb-5 group ">
             <input
-              value={values.category}
+              value={initialValues.category || values.category}
               onChange={handleChange}
               onBlur={handleBlur}
               type="text"
@@ -281,7 +332,7 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Category
             </label>
-            {errors.category && touched.category ? (
+            {errors.category && !studentData && touched.category ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.category}
               </p>
@@ -291,7 +342,7 @@ const StudentDetailsForm = () => {
         <div className="grid md:grid-cols-2 md:gap-24 max-w-4xl  mx-auto ">
           <div className="relative z-0 w-full mb-5 group ">
             <input
-              value={values.nationality}
+              value={initialValues.nationality || values.nationality}
               onChange={handleChange}
               onBlur={handleBlur}
               type="text"
@@ -303,7 +354,7 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Nationality
             </label>
-            {errors.nationality && touched.nationality ? (
+            {errors.nationality && !studentData && touched.nationality ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.nationality}
               </p>
@@ -311,7 +362,7 @@ const StudentDetailsForm = () => {
           </div>
           <div className="relative z-0 w-full mb-5 group ">
             <input
-              value={values.state}
+              value={initialValues.state || values.state}
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="off"
@@ -323,7 +374,7 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               State
             </label>
-            {errors.state && touched.state ? (
+            {errors.state && !studentData && touched.state ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.state}
               </p>
@@ -343,7 +394,7 @@ const StudentDetailsForm = () => {
             </label>
             <select
               name="branch"
-              value={values.branch}
+              value={initialValues.branch || values.branch}
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="off"
@@ -361,7 +412,7 @@ const StudentDetailsForm = () => {
               <option>Industrial Engineering</option>
               <option>Materials Engineering</option>
             </select>
-            {errors.branch && touched.branch ? (
+            {errors.branch && !studentData && touched.branch ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.branch}
               </p>
@@ -373,7 +424,7 @@ const StudentDetailsForm = () => {
             </label>
             <select
               name="admission_quota"
-              value={values.admission_quota}
+              value={initialValues.admission_quota || values.admission_quota}
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="off"
@@ -385,7 +436,9 @@ const StudentDetailsForm = () => {
               <option>AICTE</option>
               <option>MQ</option>
             </select>
-            {errors.admission_quota && touched.admission_quota ? (
+            {errors.admission_quota &&
+            !studentData &&
+            touched.admission_quota ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.admission_quota}
               </p>
@@ -395,7 +448,10 @@ const StudentDetailsForm = () => {
         <div className="grid md:grid-cols-2 md:gap-24 max-w-4xl  mx-auto ">
           <div className="relative z-0 w-full mb-5 group ">
             <input
-              value={values.registration_number_10th}
+              value={
+                initialValues.registration_number_10th ||
+                values.registration_number_10th
+              }
               onChange={handleChange}
               onBlur={handleBlur}
               type="text"
@@ -408,6 +464,7 @@ const StudentDetailsForm = () => {
               10th registeration number
             </label>
             {errors.registration_number_10th &&
+            !studentData &&
             touched.registration_number_10th ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.registration_number_10th}
@@ -416,7 +473,9 @@ const StudentDetailsForm = () => {
           </div>
           <div className="relative z-0 w-full mb-5 group">
             <input
-              value={values.passing_year_10th}
+              value={
+                initialValues.passing_year_10th || values.passing_year_10th
+              }
               onChange={handleChange}
               onBlur={handleBlur}
               name="passing_year_10th"
@@ -428,7 +487,9 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               10th passing year
             </label>
-            {errors.passing_year_10th && touched.passing_year_10th ? (
+            {errors.passing_year_10th &&
+            !studentData &&
+            touched.passing_year_10th ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.passing_year_10th}
               </p>
@@ -437,7 +498,7 @@ const StudentDetailsForm = () => {
         </div>
         <div className="relative z-0 w-full mb-5 group max-w-4xl mx-auto">
           <input
-            value={values.school_name_10th}
+            value={initialValues.school_name_10th || values.school_name_10th}
             onChange={handleChange}
             onBlur={handleBlur}
             type="text"
@@ -449,7 +510,9 @@ const StudentDetailsForm = () => {
           <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             10th school name
           </label>
-          {errors.school_name_10th && touched.school_name_10th ? (
+          {errors.school_name_10th &&
+          !studentData &&
+          touched.school_name_10th ? (
             <p className="text-red-400 opacity-80 m-1 text-sm">
               {errors.school_name_10th}
             </p>
@@ -458,7 +521,10 @@ const StudentDetailsForm = () => {
         <div className="grid md:grid-cols-2 md:gap-24 max-w-4xl  mx-auto ">
           <div className="relative z-0 w-full mb-5 group ">
             <input
-              value={values.PUC_registration_Number}
+              value={
+                initialValues.PUC_registration_Number ||
+                values.PUC_registration_Number
+              }
               onChange={handleChange}
               onBlur={handleBlur}
               name="PUC_registration_Number"
@@ -471,6 +537,7 @@ const StudentDetailsForm = () => {
               PUC/Diploma Registration Number
             </label>
             {errors.PUC_registration_Number &&
+            !studentData &&
             touched.PUC_registration_Number ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.PUC_registration_Number}
@@ -479,7 +546,9 @@ const StudentDetailsForm = () => {
           </div>
           <div className="relative z-0 w-full mb-5 group">
             <input
-              value={values.PUC_Passing_Number}
+              value={
+                initialValues.PUC_Passing_Number || values.PUC_Passing_Number
+              }
               onChange={handleChange}
               onBlur={handleBlur}
               name="PUC_Passing_Number"
@@ -491,7 +560,9 @@ const StudentDetailsForm = () => {
             <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               PUC /Diploma Passing Year
             </label>
-            {errors.PUC_Passing_Number && touched.PUC_Passing_Number ? (
+            {errors.PUC_Passing_Number &&
+            !studentData &&
+            touched.PUC_Passing_Number ? (
               <p className="text-red-400 opacity-80 m-1 text-sm">
                 {errors.PUC_Passing_Number}
               </p>
@@ -500,7 +571,7 @@ const StudentDetailsForm = () => {
         </div>
         <div className="relative z-0 w-full mb-5 group max-w-4xl mx-auto">
           <input
-            value={values.PUC_college_name}
+            value={initialValues.PUC_college_name || values.PUC_college_name}
             onChange={handleChange}
             onBlur={handleBlur}
             name="PUC_college_name"
@@ -512,7 +583,9 @@ const StudentDetailsForm = () => {
           <label className="peer-focus:font-medium absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             PUC/Diploma college name{" "}
           </label>
-          {errors.PUC_college_name && touched.PUC_college_name ? (
+          {errors.PUC_college_name &&
+          !studentData &&
+          touched.PUC_college_name ? (
             <p className="text-red-400 opacity-80 m-1 text-sm">
               {errors.PUC_college_name}
             </p>
@@ -523,21 +596,36 @@ const StudentDetailsForm = () => {
           <div>
             <div className="flex justify-between mb-1 mt-7 w-2/3">
               <span className="text-base font-medium text-black">Progress</span>
-              <span className="text-sm font-medium text-black ">1 of 2</span>
+              <span className="text-sm font-medium text-black ">
+                {studentData ? 1 : 0} of 2
+              </span>
             </div>
             <div className="w-2/3 bg-gray-200 rounded-full h-2.5  dark:bg-gray-700">
               <div
                 className="bg-green-400 h-2.5 rounded-full"
-                style={{ width: "50%" }}
+                style={studentData ? { width: `50%` } : { width: "1%" }}
               ></div>
             </div>
           </div>
-          <button
-            type="submit"
-            className="  mt-7 mb-10 ml-56 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm w-24  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            submit
-          </button>
+          {studentData ? (
+            <Link
+              to="/documentsForm"
+              className={`mt-7 mb-10 ml-56 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm w-24  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 
+            `}
+            >
+              Next
+            </Link>
+          ) : (
+            <button
+              type="submit"
+              disabled={studentData}
+              className={`mt-7 mb-10 ml-56 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm w-24  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ${
+                studentData ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
+            >
+              submit
+            </button>
+          )}
         </div>
       </form>
     </div>
