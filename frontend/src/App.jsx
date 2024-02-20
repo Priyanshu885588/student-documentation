@@ -5,6 +5,7 @@ import { HomePage } from "./Components/Home/HomePage";
 import StudentDetailsForm from "./Components/Student/StudentDetailsForm";
 import { StudentDocuments } from "./Components/Student/StudentDocuments";
 import { PrivateRoute } from "./Components/Student/PrivateRoute";
+import { ThankYou } from "./Components/Student/ThankYou";
 function App() {
   return (
     <Router>
@@ -12,7 +13,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/" element={<PrivateRoute />}>
           <Route path="/detailsForm/:batch" element={<StudentDetailsForm />} />
-          <Route path="/documentsForm" element={<StudentDocuments />} />
+          <Route path="/documentsForm/:batch" element={<StudentDocuments />} />
+          <Route path="/thankyou" element={<ThankYou />} />
         </Route>
         <Route path="/admin/*" element={<AdminPage />} />
       </Routes>

@@ -4,8 +4,8 @@ const db = require("../db/db");
 const jwt = require("jsonwebtoken");
 const adminModel = require("../models/admin");
 const nodemailer = require("nodemailer");
-const ExcelJS = require('exceljs');
-const fs = require('fs');
+const ExcelJS = require("exceljs");
+const fs = require("fs");
 
 require("dotenv").config();
 
@@ -97,46 +97,101 @@ const sendVerificationCodeEmail = async (username, verificationCode) => {
     to: "basketball313032@gmail.com",
     subject: "Verification Code for Registration",
     html: `
-    <html>
-      <head>
-        <style>
-          body {
-            text-align: center;
-            background-color: #f4f4f4;
-            font-family: 'Arial', sans-serif;
-          }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          }
-          h2 {
-            color: #333333;
-          }
-          p {
-            color: #555555;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-        <center>
-        <h6>${username} </h6>
-          <h4>Requested verification code for admin registration in student documentation upload website ~RNSIT</h4>
-          <br>
-          <p>Verification code is:</p>
-          <h1><strong>${verificationCode}</strong></h1>
-          </center>
-          <br>
-          <br>
-          <br>
-          <h6 style="font-style: italic;">For verification purposes only for the student documentation upload <br> Thank You</h6>
-        </div>
-      </body>
-    </html>
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: grey;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Make body fill entire viewport height */
+    }
+    .container {
+      max-width: 600px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: left; /* Align content within container to left */
+    }
+    h1, h4, p {
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #333333;
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+    h4 {
+      color: #4CAF50;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    p {
+      color: #555555;
+      font-size: 18px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+    .code {
+      display: flex;
+      justify-content: center;
+    }
+    .digit {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 24px;
+      margin: 0 5px;
+      width: 10px;
+      text-align: center;
+    }
+    .footer {
+      font-style: italic;
+      color: #888888;
+      margin-top: 20px;
+    }
+    .logo {
+      max-width: 100px;
+      margin-bottom: 20px;
+    }
+    .timer {
+      font-size: 20px;
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <img src="https://www.rnsit.ac.in/wp-content/themes/rnsit/webp/logo.webp" alt="College Logo" class="logo">
+      <h1>Hello,</h1>
+      <p><strong>${username}</strong> Requested verification code for admin registration in student documentation upload website ~RNSIT</p>
+      <p>To approve their request, please use the verification code below:</p>
+      <div class="code">
+        <span class="digit">${String(verificationCode).charAt(0)}</span>
+        <span class="digit">${String(verificationCode).charAt(1)}</span>
+        <span class="digit">${String(verificationCode).charAt(2)}</span>
+        <span class="digit">${String(verificationCode).charAt(3)}</span>
+        <span class="digit">${String(verificationCode).charAt(4)}</span>
+        <span class="digit">${String(verificationCode).charAt(5)}</span>
+      </div>
+      <p class="footer">For verification purposes only for the student documentation upload <br> Thank You</p>
+    </div>
+  </div>
+</body>
+</html>
+
   `,
   };
 
@@ -149,80 +204,84 @@ const sendVerificationCodeEmail = async (username, verificationCode) => {
   }
 };
 
-const search = async (req,res)=>{
-const { id,name,admission_category,status,batch} = req.query;
-const queryObject = {};
+const search = async (req, res) => {
+  const { id, name, admission_category, status, batch } = req.query;
+  const queryObject = {};
 
-if (admission_category) {
-  queryObject.admission_category = admission_category;
-}
-
-if (id) {
-  queryObject.id = id;
-}
-
-if (name) {
-  queryObject.name = name;
-}
-
-if(status){
-  queryObject.status = status;
-}
-
-
-try {
-  console.log([queryObject]);
-  const queryString = `SELECT * FROM student_${batch} WHERE ?`;
-  const students = await db.promise().query(queryString, [queryObject]);
-  
-  if (students.length === 0) {
-    return res.status(201).json("No job offers found...");
+  if (admission_category) {
+    queryObject.admission_category = admission_category;
   }
 
-  res.status(200).json(students);
-} catch (error) {
-  console.error(error);
-  res.status(400).json({ msg: "Something went wrong..." });
-}
-}
+  if (id) {
+    queryObject.id = id;
+  }
+
+  if (name) {
+    queryObject.name = name;
+  }
+
+  if (status) {
+    queryObject.status = status;
+  }
+
+  try {
+    console.log([queryObject]);
+    const queryString = `SELECT * FROM student_${batch} WHERE ?`;
+    const students = await db.promise().query(queryString, [queryObject]);
+
+    if (students.length === 0) {
+      return res.status(201).json("No job offers found...");
+    }
+
+    res.status(200).json(students);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ msg: "Something went wrong..." });
+  }
+};
 
 const downloadStudentsInfo = async (req, res) => {
   const { batch } = req.query;
   try {
-      const student_details = await db.promise().query(`
+    const student_details = await db.promise().query(`
           SELECT *
           FROM student_${batch}
           LEFT JOIN student_${batch}_details ON student_${batch}.id = student_${batch}_details.id;
       `);
 
-      // Create a new Excel workbook
-      const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet('Student Details');
+    // Create a new Excel workbook
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Student Details");
 
-      // Add column headers to the worksheet
-      const columns = [];
-      student_details[1].forEach(column => {
-          columns.push({ header: column.name, key: column.name, width: 20 });
-      });
-      worksheet.columns = columns;
+    // Add column headers to the worksheet
+    const columns = [];
+    student_details[1].forEach((column) => {
+      columns.push({ header: column.name, key: column.name, width: 20 });
+    });
+    worksheet.columns = columns;
 
-      // Add data rows to the worksheet
-      student_details[0].forEach(row => {
-          worksheet.addRow(row);
-      });
+    // Add data rows to the worksheet
+    student_details[0].forEach((row) => {
+      worksheet.addRow(row);
+    });
 
-      // Generate a unique filename for the Excel file
-      const filename = `student_details_${batch}.xlsx`;
-      const filePath = `excel/${filename}`; // Specify the directory where you want to store the file
+    // Generate a unique filename for the Excel file
+    const filename = `student_details_${batch}.xlsx`;
+    const filePath = `excel/${filename}`; // Specify the directory where you want to store the file
 
-      // Write the Excel file to the specified directory
-      await workbook.xlsx.writeFile(filePath);
+    // Write the Excel file to the specified directory
+    await workbook.xlsx.writeFile(filePath);
 
-      res.status(200).json({ filename }); // Send the filename in the response
+    res.status(200).json({ filename }); // Send the filename in the response
   } catch (error) {
-      res.status(400).json(error);
+    res.status(400).json(error);
   }
 };
 
-
-module.exports = { AdminRegister, AdminLogin, sendVerificationCode,search,downloadStudentsInfo };
+module.exports = {
+  AdminRegister,
+  AdminLogin,
+  sendVerificationCode,
+  search,
+  downloadStudentsInfo,
+};

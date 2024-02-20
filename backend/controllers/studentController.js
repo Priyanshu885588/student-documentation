@@ -1,7 +1,7 @@
 const db = require("../db/db");
 const jwt = require("jsonwebtoken");
-const multer=require('multer');
-const fs=require('fs')
+const multer = require("multer");
+const fs = require("fs");
 
 const getAllBatches = async (req, res) => {
   try {
@@ -224,65 +224,58 @@ const getStudentDetails = async (req, res) => {
   }
 };
 
-
-
-
 const documentsUpload = async (req, res) => {
   const { uniqueid } = req.user;
-  const batch=req.body.batch;
-  console.log(batch);
+  const batch = req.query.batch;
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      const uploadDir = 'C:/uploads/';
+      const uploadDir = "C:/uploads/";
 
       // Check if the directory exists
       if (!fs.existsSync(uploadDir)) {
-          // If not, create the directory
-          fs.mkdirSync(uploadDir);
+        // If not, create the directory
+        fs.mkdirSync(uploadDir);
       }
 
       cb(null, uploadDir);
-  },
+    },
     filename: function (req, file, cb) {
-        cb(null, file.originalname); // Specify how the uploaded files will be named
+      cb(null, file.originalname); // Specify how the uploaded files will be named
+    },
+  });
+
+  const upload = multer({ storage: storage });
+  upload.array("documents")(req, res, async function (err) {
+    if (err) {
+      return res.status(500).send("invalid documents");
+    }
+
+    const uploadedFiles = req.files;
+    if (uploadedFiles.length != 6) {
+      return res.status(500).json({ msg: "Please enter all the documents" });
+    }
+    console.log(uploadedFiles);
+
+    const filepaths = uploadedFiles.map(
+      (file) => file.destination + file.filename
+    );
+    console.log(filepaths);
+    const values = uploadedFiles
+      .map((file) => `'${file.destination}${file.filename}'`)
+      .join(", ");
+    console.log(values);
+
+    // Save the file paths to the database or perform other actions
+    const query = `insert into student_${batch}_documents values ('${uniqueid}',${values})`;
+
+    try {
+      const data = await db.promise().query(query);
+      return res.status(200).json({ msg: "documents uploaded successfully" });
+    } catch (error) {
+      return res.status(400).json({ msg: "Something went wrong...", error });
     }
   });
-  
-  const upload = multer({ storage: storage });
-  upload.array('documents')(req, res, async function (err) {
-      if (err) {
-          return res.status(500).send("invalid documents");
-      }
-      
-      const uploadedFiles = req.files;
-      const batch=req.body.batch;
-      if(uploadedFiles.length!=6){
-        return res.status(500).json({msg:"Please enter all the documents"})
-      }
-      console.log(uploadedFiles);
-
-      const filepaths=uploadedFiles.map(file => file.destination + file.filename);
-      console.log(filepaths);
-      const values = uploadedFiles.map(file => `'${file.destination}${file.filename}'`).join(', ');
-      console.log(values);
-
-      // Save the file paths to the database or perform other actions
-      const query=`insert into student_${batch}_documents values ('${uniqueid}',${values})`;
-
-      try {
-        const data=await db.promise().query(query);
-        return res.status(200).json({ msg: "documents uploaded successfully" });
-t
-      
-      } catch (error) {
-        return res.status(400).json({ msg: "Something went wrong...", error });
-
-      }
-      
-     
-    });
-  };
-  
+};
 
 module.exports = {
   getStudentData,
@@ -291,5 +284,5 @@ module.exports = {
   search,
   uploadStudentInfo,
   getStudentDetails,
-  documentsUpload
+  documentsUpload,
 };

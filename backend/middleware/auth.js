@@ -22,7 +22,6 @@ const authenticationMiddleware = async (req, res, next) => {
 
 const studentAuthMiddlware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log(authHeader);
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     res.status(400).send({ msg: "No token provided" });
   }
