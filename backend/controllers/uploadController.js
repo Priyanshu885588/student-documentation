@@ -1,4 +1,7 @@
 const express = require("express");
+const fs = require('fs');
+const multer=require('multer');
+
 const exceljs = require("exceljs");
 const studentModel = require("../models/student");
 
@@ -30,11 +33,16 @@ const uploadExcel = (req, res) => {
       studentModel.insertStudent(batch, name, admissionCategory);
     }
     studentModel.createStudentDetailsTable(batch);
+    studentModel.createStudentDocumentsTable(batch);
 
     res.status(200).json({ message: "Data imported successfully." });
   });
 };
 
+
+
+
 module.exports = {
   uploadExcel,
+
 };

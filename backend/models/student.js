@@ -77,10 +77,34 @@ const createStudentDetailsTable = (batch) => {
   });
 };
 
+const createStudentDocumentsTable=(batch)=>{
+  const table_name = `student_${batch}_documents`;
+
+  const query=`CREATE TABLE IF NOT EXISTS ${table_name}(
+    id VARCHAR(8),
+    photo VARCHAR(50),
+    aadhar_card VARCHAR(50),
+    marks_10th VARCHAR(50),
+    marks_12th VARCHAR(50),
+    transfer_certificate VARCHAR(50),
+    study_certificate VARCHAR(50),
+    FOREIGN KEY(id) REFERENCES student_${batch}(id)
+  )`;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error(`Error creating ${table_name} table:`, err.message);
+    } else {
+      console.log(`${table_name} table created successfully.`);
+    }
+  });
+};
+
 module.exports = {
   createStudentTable,
   insertStudent,
   createStudentDetailsTable,
+  createStudentDocumentsTable
 };
 
 // {
