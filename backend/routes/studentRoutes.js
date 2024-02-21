@@ -17,4 +17,6 @@ router
   .route("/getStudentdocuments")
   .get(auth.studentAuthMiddlware, studentController.getStudentDocuments);
 
+router.route("/getupoadedinfo").get(studentController.get_student_data)
+
 module.exports = router;

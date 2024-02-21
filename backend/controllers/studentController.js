@@ -311,8 +311,7 @@ const getStudentDocuments=async(req,res)=>{
     res.status(200).json(studentdocuments);
   } catch (error) {
     res.status(400).json({ msg: "Something went wrong...", error });
-  }
-}
+  }}
 
 module.exports = {
   getStudentData,
@@ -322,5 +321,6 @@ module.exports = {
   uploadStudentInfo,
   getStudentDetails,
   documentsUpload,
-  getStudentDocuments
+  getStudentDocuments,
+  get_student_data
 };
