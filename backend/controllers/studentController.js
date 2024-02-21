@@ -33,7 +33,9 @@ const getStudentData = async (req, res) => {
       .query(
         `SELECT * FROM student_${batch} ORDER BY insertion_order Limit ${start_index},50`
       );
-    res.status(200).json({ rows, length: rows.length, pagesCount: pagesCount });
+    const  response  = await db.promise().query(`SELECT count(*) FROM student_${batch} WHERE status = 1`)
+    const { ["count(*)"]: statusCount } = response[0][0];
+    res.status(200).json({ rows, length: rows.length, pagesCount: pagesCount,countValue:countValue,statusCount:statusCount });
   } catch (error) {
     console.error("Error executing the query:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -278,31 +280,44 @@ const documentsUpload = async (req, res) => {
 };
 
 
-const get_student_data = async (req,res)=>{
-  const {batch} = req.query
-  if(!batch){
-    return res.status(400).json({msg:"Batch must be entred!!!"});
+const get_student_data = async (req, res) => {
+  const { batch } = req.query;
+  if (!batch) {
+    return res.status(400).json({ msg: "Batch must be entred!!!" });
   }
   try {
     const student_details = await db.promise().query(`
     SELECT *
-    FROM student_${batch}
-    LEFT JOIN student_${batch}_documents ON student_${batch}.id = student_${batch}_documents.id
-    
+    FROM student_${batch}_details
+    LEFT JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id
+
     UNION ALL
-    
+
     SELECT *
-    FROM student_${batch}
-    RIGHT JOIN student_${batch}_documents ON student_${batch}.id = student_${batch}_documents.id
-    
-      `);
-
-      res.status(200).json({student_details})
+    FROM student_${batch}_details
+    RIGHT JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id`);
+    const data = student_details[0];
+    res.status(200).json({ data });
   } catch (error) {
-     res.status(400).json({msg:"something went wrong",error});
+    res.status(400).json({ msg: "something went wrong", error });
   }
-}
+};
+const getStudentDocuments = async (req, res) => {
+  const { uniqueid } = req.user;
+  const { batch } = req.query;
 
+  try {
+    const data = await db
+      .promise()
+      .query(`select * from student_${batch}_documents where id = ?`, [
+        uniqueid,
+      ]);
+    const studentdocuments = data[0][0];
+    res.status(200).json(studentdocuments);
+  } catch (error) {
+    res.status(400).json({ msg: "Something went wrong...", error });
+  }
+};
 module.exports = {
   getStudentData,
   getAllBatches,
@@ -311,5 +326,7 @@ module.exports = {
   uploadStudentInfo,
   getStudentDetails,
   documentsUpload,
-  get_student_data
+  get_student_data,
+  getStudentDocuments,
+  get_student_data,
 };
