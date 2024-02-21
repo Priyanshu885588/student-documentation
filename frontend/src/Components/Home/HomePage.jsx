@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StartingAnimation } from "../UI/StartingAnimation";
 import Studentlogin from "../Student/Studentlogin";
-import { LoginAnimation } from "../UI/loginanimation";
+import { LoginAnimation } from "../UI/LoginAnimation";
 
 export const HomePage = () => {
   const [showStartingAnimation, setShowStartingAnimation] = useState(true);

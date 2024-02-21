@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LoginAnimation } from "../UI/loginanimation";
+import { LoginAnimation } from "../UI/LoginAnimation";
 import { studentLogin } from "./Services/Services";
 import { useNavigate } from "react-router-dom";
 import { MdDateRange } from "react-icons/md";
