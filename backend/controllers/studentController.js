@@ -277,6 +277,32 @@ const documentsUpload = async (req, res) => {
   });
 };
 
+
+const get_student_data = async (req,res)=>{
+  const {batch} = req.query
+  if(!batch){
+    return res.status(400).json({msg:"Batch must be entred!!!"});
+  }
+  try {
+    const student_details = await db.promise().query(`
+    SELECT *
+    FROM student_${batch}
+    LEFT JOIN student_${batch}_documents ON student_${batch}.id = student_${batch}_documents.id
+    
+    UNION ALL
+    
+    SELECT *
+    FROM student_${batch}
+    RIGHT JOIN student_${batch}_documents ON student_${batch}.id = student_${batch}_documents.id
+    
+      `);
+
+      res.status(200).json({student_details})
+  } catch (error) {
+     res.status(400).json({msg:"something went wrong",error});
+  }
+}
+
 module.exports = {
   getStudentData,
   getAllBatches,
@@ -285,4 +311,5 @@ module.exports = {
   uploadStudentInfo,
   getStudentDetails,
   documentsUpload,
+  get_student_data
 };
