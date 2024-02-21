@@ -13,5 +13,8 @@ router
 router
   .route("/getStudentinfo")
   .get(auth.studentAuthMiddlware, studentController.getStudentDetails);
+  router
+  .route("/getStudentdocuments")
+  .get(auth.studentAuthMiddlware, studentController.getStudentDocuments);
 
 module.exports = router;
