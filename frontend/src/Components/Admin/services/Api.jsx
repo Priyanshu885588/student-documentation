@@ -71,6 +71,18 @@ const adminSignUp = async (data) => {
   }
 };
 
+const getSingleStudentData = async (batch, id) => {
+  try {
+    const response = await axios.get(
+      `${baseURL}/getuploadedinfo?batch=${batch}&uniqueId=${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching student data:", error);
+    throw error;
+  }
+};
+
 export {
   fetchStudentData,
   uploadFile,
@@ -79,4 +91,5 @@ export {
   verificationAdmin,
   adminSignUp,
   searchStudentData,
+  getSingleStudentData,
 };

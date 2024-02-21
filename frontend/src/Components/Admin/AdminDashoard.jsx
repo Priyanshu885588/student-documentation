@@ -7,9 +7,12 @@ import { FaAccusoft } from "react-icons/fa";
 import { FaCodeBranch } from "react-icons/fa";
 import { GrGroup } from "react-icons/gr";
 import Pagination from "./Pageination";
+import { useNavigate } from "react-router-dom";
+import { SingleStudentDetails } from "./SingleStudentDetails";
 
 export const AdminDashboard = () => {
   const [batch, setBatch] = useState("");
+  const [id, setId] = useState("");
   const [isError, setIsError] = useState(false);
   const [loading, setIsLoading] = useState(true);
   const [studentData, setStudentData] = useState([]);
@@ -17,6 +20,7 @@ export const AdminDashboard = () => {
   const [batches, setIsbatches] = useState();
   const [pgCount, setpagecount] = useState();
   const [page, setPage] = useState();
+  const navigate = useNavigate();
 
   const fetchData = async (batchData, currentPage) => {
     try {
@@ -75,11 +79,25 @@ export const AdminDashboard = () => {
     fetchBatches();
   }, []);
 
+  const handleSingleStudent = () => {
+    setId(null);
+  };
+
   if (loading) {
     return (
       <div className="w-full h-screen flex justify-center items-center">
         <Loading />
       </div>
+    );
+  }
+
+  if (id) {
+    return (
+      <SingleStudentDetails
+        id={id}
+        batch={batch}
+        handleSingleStudent={handleSingleStudent}
+      />
     );
   }
 
@@ -200,7 +218,8 @@ export const AdminDashboard = () => {
                     {studentData.map((student, index) => (
                       <tr
                         key={student.id}
-                        className="text-center border-b border-gray-30"
+                        className="text-center border-b border-gray-30 hover:bg-slate-100 cursor-pointer"
+                        onClick={() => setId(student.id)}
                       >
                         <td className="py-2 px-4">{student.insertion_order}</td>
                         <td className="py-2 px-4 mono">{student.id}</td>
