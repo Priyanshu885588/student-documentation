@@ -1,16 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { LoginAnimation } from "../UI/LoginAnimation";
 
 export const ThankYou = () => {
+  const [showCheckIcon, setShowCheckIcon] = useState(true);
+ // Empty dependency array ensures that this effect runs only once after the component mounts
+
   return (
-    <div className="h-screen w-screen flex justify-center items-center ">
-      <div className="text-7xl playfair flex items-end justify-center gap-4">
-        <span>ThankY</span>
-        <div className="animate-spin">
-          <div className="h-7 w-7 border-2 rounded-full bg-blue-700 animate-pulse"></div>
-          <div className="h-7 w-7 border-2 rounded-full bg-orange-500"></div>
+    <div className="w-screen h-screen relative flex justify-center items-center overflow-hidden homepage-bg-light">
+      
+      
+      <div className="login_box">
+        <h1 className="text-3xl text-center mb-5 mt-11 ">Upload Successful !!</h1>
+        <div className="success-checkmark">
+          {showCheckIcon && (
+            <div className="check-icon">
+              <span className="icon-line line-tip"></span>
+              <span className="icon-line line-long"></span>
+              <div className="icon-circle"></div>
+              <div className="icon-fix"></div>
+            </div>
+          )}
         </div>
-        <span>u</span>
+        <h2 className="text-xl text-center mb-5 ">Your details have be Successful uploaded.</h2>
+        <div className="grid place-items-center h-full  ">
+        <button
+          className="text-white mt-5 mb-9 px-10 py-2 border-2 backdrop-blur-3xl roboto text-lg rounded-full hover:bg-gray-200 hover:text-black transition-all duration-300"
+          >
+          Loout
+        </button>
+     </div>
       </div>
+            
+      <div className="zoom-thank"></div>
     </div>
   );
 };
+
+
