@@ -244,10 +244,10 @@ const downloadStudentsInfo = async (req, res) => {
   const { batch } = req.query;
   try {
     const student_details = await db.promise().query(`
-          SELECT *
-          FROM student_${batch}
-          LEFT JOIN student_${batch}_details ON student_${batch}.id = student_${batch}_details.id;
-      `);
+      SELECT *
+      FROM student_${batch}_details
+      JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id
+    `);
 
     // Create a new Excel workbook
     const workbook = new ExcelJS.Workbook();
@@ -267,16 +267,21 @@ const downloadStudentsInfo = async (req, res) => {
 
     // Generate a unique filename for the Excel file
     const filename = `student_details_${batch}.xlsx`;
-    const filePath = `excel/${filename}`; // Specify the directory where you want to store the file
 
-    // Write the Excel file to the specified directory
-    await workbook.xlsx.writeFile(filePath);
+    // Write the Excel file to a buffer
+    const buffer = await workbook.xlsx.writeBuffer();
 
-    res.status(200).json({ filename }); // Send the filename in the response
+    // Set the response headers for file download
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+    // Send the file content in the response
+    res.status(200).send(buffer);
   } catch (error) {
     res.status(400).json(error);
   }
 };
+
 
 module.exports = {
   AdminRegister,
