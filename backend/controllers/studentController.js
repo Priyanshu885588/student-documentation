@@ -34,7 +34,9 @@ const getStudentData = async (req, res) => {
       .query(
         `SELECT * FROM student_${batch} ORDER BY insertion_order Limit ${start_index},50`
       );
-    res.status(200).json({ rows, length: rows.length, pagesCount: pagesCount });
+    const  response  = await db.promise().query(`SELECT count(*) FROM student_${batch} WHERE status = 1`)
+    const { ["count(*)"]: statusCount } = response[0][0];
+    res.status(200).json({ rows, length: rows.length, pagesCount: pagesCount,countValue:countValue,statusCount:statusCount });
   } catch (error) {
     console.error("Error executing the query:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -347,3 +349,4 @@ module.exports = {
   getStudentDocuments,
   get_student_data,
 };
+
