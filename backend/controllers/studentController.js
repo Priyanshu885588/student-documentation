@@ -299,7 +299,7 @@ const documentsUpload = async (req, res) => {
 };
 
 const get_student_data = async (req, res) => {
-  const { batch } = req.query;
+  const { batch,uniqueId } = req.query;
   if (!batch) {
     return res.status(400).json({ msg: "Batch must be entred!!!" });
   }
@@ -308,12 +308,16 @@ const get_student_data = async (req, res) => {
     SELECT *
     FROM student_${batch}_details
     LEFT JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id
+    WHERE student_${batch}_details.id = ? 
 
     UNION ALL
 
     SELECT *
     FROM student_${batch}_details
-    RIGHT JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id`);
+    RIGHT JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id
+    WHERE student_${batch}_documents.id = ?
+`, [uniqueId, uniqueId]);
+
     const data = student_details[0];
     res.status(200).json({ data });
   } catch (error) {
