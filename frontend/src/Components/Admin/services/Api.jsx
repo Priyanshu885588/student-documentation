@@ -83,6 +83,26 @@ const getSingleStudentData = async (batch, id) => {
   }
 };
 
+const downloadExcel = async (batch) => {
+  try {
+    const response = await axios.get(`${baseURL}/download?batch=${batch}`, {
+      responseType: "blob", // Set response type to 'blob' for binary data
+    });
+    // Create a blob URL for the downloaded file
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    // Create a link element to trigger the download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `student_details_${batch}.xlsx`; // Set the filename
+    document.body.appendChild(a);
+    a.click(); // Click the link to start the download
+    document.body.removeChild(a); // Clean up the link element
+    window.URL.revokeObjectURL(url); // Revoke the blob URL to free up memory
+  } catch (error) {
+    console.error("Error downloading student data:", error);
+  }
+};
+
 export {
   fetchStudentData,
   uploadFile,
@@ -92,4 +112,5 @@ export {
   adminSignUp,
   searchStudentData,
   getSingleStudentData,
+  downloadExcel,
 };

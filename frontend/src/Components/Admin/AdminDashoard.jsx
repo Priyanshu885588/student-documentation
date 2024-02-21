@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Loading } from "../UI/Loading";
 import { VerticalNavbar } from "./Navbar/VerticalNavbar";
-import { fetchStudentBatches, fetchStudentData } from "./services/Api";
+import {
+  downloadExcel,
+  fetchStudentBatches,
+  fetchStudentData,
+} from "./services/Api";
 import { PiStudentDuotone } from "react-icons/pi";
 import { FaAccusoft } from "react-icons/fa";
-import { FaCodeBranch } from "react-icons/fa";
+import { SiMicrosoftexcel } from "react-icons/si";
 import { GrGroup } from "react-icons/gr";
 import Pagination from "./Pageination";
 import { useNavigate } from "react-router-dom";
@@ -32,14 +36,9 @@ export const AdminDashboard = () => {
       setPage(currentPage - 1);
       setStudentData(data.rows);
       setpagecount(data.pagesCount);
-      const totalStudents = data.length;
-      const submittedStudents = data.rows.reduce((count, student) => {
-        return count + (student.status.data[0] === 1 ? 1 : 0);
-      }, 0);
-
       setStudentCount({
-        totalStudents: totalStudents,
-        submittedStudents: submittedStudents,
+        totalStudents: data.countValue,
+        submittedStudents: data.statusCount,
       });
     } catch (error) {
       console.error("Error in AdminDashboard", error);
@@ -81,6 +80,10 @@ export const AdminDashboard = () => {
 
   const handleSingleStudent = () => {
     setId(null);
+  };
+
+  const handleDownloadExcel = () => {
+    downloadExcel(batch);
   };
 
   if (loading) {
@@ -145,18 +148,15 @@ export const AdminDashboard = () => {
               </div>
             </div>
             <div className="bg-white h-full w-1/4 rounded-xl gap-5 shadow-lg flex justify-center items-center">
-              <div className="p-3 bg-green-100 rounded-full shadow-sm shadow-green-700">
-                <FaCodeBranch color="#19794D" size="2.5rem" />
+              <div
+                className="p-3 bg-green-100 rounded-full shadow-sm shadow-green-700 cursor-pointer"
+                onClick={handleDownloadExcel}
+              >
+                <SiMicrosoftexcel color="#19794D" size="2.5rem" />
               </div>
-              <div>
-                <p className="text-lg font-bold roboto">
-                  {studentCount.submittedStudents}{" "}
-                  <span className="text-sm font-medium robot text-gray-500">
-                    / {studentCount.totalStudents}
-                  </span>
-                </p>
+              <div className="flex flex-col gap-2 justify-center items-center">
                 <p className="text-xs nunito opacity-75 text-gray-500">
-                  Total submitted
+                  Download <br /> Excel sheet
                 </p>
               </div>
             </div>
