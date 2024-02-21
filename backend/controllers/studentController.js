@@ -34,9 +34,19 @@ const getStudentData = async (req, res) => {
       .query(
         `SELECT * FROM student_${batch} ORDER BY insertion_order Limit ${start_index},50`
       );
-    const  response  = await db.promise().query(`SELECT count(*) FROM student_${batch} WHERE status = 1`)
+    const response = await db
+      .promise()
+      .query(`SELECT count(*) FROM student_${batch} WHERE status = 1`);
     const { ["count(*)"]: statusCount } = response[0][0];
-    res.status(200).json({ rows, length: rows.length, pagesCount: pagesCount,countValue:countValue,statusCount:statusCount });
+    res
+      .status(200)
+      .json({
+        rows,
+        length: rows.length,
+        pagesCount: pagesCount,
+        countValue: countValue,
+        statusCount: statusCount,
+      });
   } catch (error) {
     console.error("Error executing the query:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -299,24 +309,20 @@ const documentsUpload = async (req, res) => {
 };
 
 const get_student_data = async (req, res) => {
-  const { batch,uniqueId } = req.query;
+  const { batch, uniqueId } = req.query;
   if (!batch) {
     return res.status(400).json({ msg: "Batch must be entred!!!" });
   }
   try {
-    const student_details = await db.promise().query(`
+    const student_details = await db.promise().query(
+      `
     SELECT *
     FROM student_${batch}_details
-    LEFT JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id
+    JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id
     WHERE student_${batch}_details.id = ? 
-
-    UNION ALL
-
-    SELECT *
-    FROM student_${batch}_details
-    RIGHT JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id
-    WHERE student_${batch}_documents.id = ?
-`, [uniqueId, uniqueId]);
+`,
+      [uniqueId, uniqueId]
+    );
 
     const data = student_details[0];
     res.status(200).json({ data });
@@ -353,4 +359,3 @@ module.exports = {
   getStudentDocuments,
   get_student_data,
 };
-
