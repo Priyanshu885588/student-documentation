@@ -14,7 +14,7 @@ app.use(cookieParser());
 
 app.use("/api/v1/admin/upload", uploadRoutes);
 app.use("/api/v1/admin/", adminRoutes);
-app.use("/api/v1/", studentRoutes);
+app.use("/api/v1/", studentRoutes); 
 
 app.get("/", (req, res) => {
   console.log("Reached the root route");

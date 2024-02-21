@@ -2,8 +2,7 @@ const db = require("../db/db");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const fs = require("fs");
-const path = require('path');
-
+const path = require("path");
 
 const getAllBatches = async (req, res) => {
   try {
@@ -35,7 +34,19 @@ const getStudentData = async (req, res) => {
       .query(
         `SELECT * FROM student_${batch} ORDER BY insertion_order Limit ${start_index},50`
       );
-    res.status(200).json({ rows, length: rows.length, pagesCount: pagesCount });
+    const response = await db
+      .promise()
+      .query(`SELECT count(*) FROM student_${batch} WHERE status = 1`);
+    const { ["count(*)"]: statusCount } = response[0][0];
+    res
+      .status(200)
+      .json({
+        rows,
+        length: rows.length,
+        pagesCount: pagesCount,
+        countValue: countValue,
+        statusCount: statusCount,
+      });
   } catch (error) {
     console.error("Error executing the query:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -231,26 +242,23 @@ const documentsUpload = async (req, res) => {
   const batch = req.query.batch;
   var data;
 
-  const namequery=`select name from student_${batch} where id='${uniqueid}'`
+  const namequery = `select name from student_${batch} where id='${uniqueid}'`;
   try {
     data = await db.promise().query(namequery);
     console.log("name received", data);
-    
   } catch (error) {
     return res.status(400).json({ msg: "Something went wrong...", error });
   }
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-
-      const uploadDir=path.join('C:','uploads')
+      const uploadDir = path.join("C:", "uploads");
 
       if (!fs.existsSync(uploadDir)) {
         // If not, create the directory
         fs.mkdirSync(uploadDir);
       }
 
-
-      const uploadDirWithName = path.join('C:', 'uploads', data[0][0].name);
+      const uploadDirWithName = path.join("C:", "uploads", data[0][0].name);
       // Check if the directory exists
       if (!fs.existsSync(uploadDirWithName)) {
         // If not, create the directory
@@ -276,43 +284,68 @@ const documentsUpload = async (req, res) => {
     }
     console.log(uploadedFiles);
 
-    const filepaths = uploadedFiles.map(
-      (file) => file.path
-    );
+    const filepaths = uploadedFiles.map((file) => file.path);
     console.log(filepaths);
     const values = uploadedFiles
-          .map((file) => `'${file.destination.replace(/\\/g, '/')}/${file.filename}'`)
-              .join(", ");
-
+      .map(
+        (file) => `'${file.destination.replace(/\\/g, "/")}/${file.filename}'`
+      )
+      .join(", ");
 
     // Save the file paths to the database or perform other actions
     const query = `insert into student_${batch}_documents values ('${uniqueid}',${values})`;
-    const query1=`UPDATE student_${batch} SET status=1 WHERE id='${uniqueid}'`;
+    const query1 = `UPDATE student_${batch} SET status=1 WHERE id='${uniqueid}'`;
 
     try {
-      const [data1,data2] = await Promise.all([db.promise().query(query),db.promise().query(query1)]);
-      return res.status(200).json({ msg: "documents uploaded successfully"});
+      const [data1, data2] = await Promise.all([
+        db.promise().query(query),
+        db.promise().query(query1),
+      ]);
+      return res.status(200).json({ msg: "documents uploaded successfully" });
     } catch (error) {
       return res.status(400).json({ msg: "Something went wrong...", error });
     }
   });
-  
 };
 
-const getStudentDocuments=async(req,res)=>{
+const get_student_data = async (req, res) => {
+  const { batch, uniqueId } = req.query;
+  if (!batch) {
+    return res.status(400).json({ msg: "Batch must be entred!!!" });
+  }
+  try {
+    const student_details = await db.promise().query(
+      `
+    SELECT *
+    FROM student_${batch}_details
+    JOIN student_${batch}_documents ON student_${batch}_details.id = student_${batch}_documents.id
+    WHERE student_${batch}_details.id = ? 
+`,
+      [uniqueId, uniqueId]
+    );
+
+    const data = student_details[0];
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ msg: "something went wrong", error });
+  }
+};
+const getStudentDocuments = async (req, res) => {
   const { uniqueid } = req.user;
   const { batch } = req.query;
 
   try {
     const data = await db
       .promise()
-      .query(`select * from student_${batch}_documents where id = ?`, [uniqueid]);
+      .query(`select * from student_${batch}_documents where id = ?`, [
+        uniqueid,
+      ]);
     const studentdocuments = data[0][0];
     res.status(200).json(studentdocuments);
   } catch (error) {
     res.status(400).json({ msg: "Something went wrong...", error });
   }
-}
+};
 
 module.exports = {
   getStudentData,
@@ -322,5 +355,7 @@ module.exports = {
   uploadStudentInfo,
   getStudentDetails,
   documentsUpload,
-  getStudentDocuments
+  get_student_data,
+  getStudentDocuments,
+  get_student_data,
 };
