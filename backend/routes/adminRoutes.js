@@ -5,7 +5,8 @@ const {
   AdminRegister,
   AdminLogin,
   sendVerificationCode,
-  search,downloadStudentsInfo
+  search,downloadStudentsInfo,
+  deleteStudentsData
 } = require("../controllers/adminController");
 const authenticationMiddleware = require("../middleware/auth");
 
@@ -17,5 +18,6 @@ router.route("/download").get(downloadStudentsInfo);
 router.route("/students").get(studentController.getStudentData);
 router.route("/students/search").get(studentController.search);
 router.route("/students/batches").get(studentController.getAllBatches);
+router.route("/students/deletedata").delete(deleteStudentsData)
 
 module.exports = router;

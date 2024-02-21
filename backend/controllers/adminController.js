@@ -6,6 +6,8 @@ const adminModel = require("../models/admin");
 const nodemailer = require("nodemailer");
 const ExcelJS = require("exceljs");
 const fs = require("fs");
+const fse = require('fs-extra'); 
+
 
 require("dotenv").config();
 
@@ -278,10 +280,35 @@ const downloadStudentsInfo = async (req, res) => {
   }
 };
 
+const deleteStudentsData=async (req,res)=>{
+  const id=req.query.id;
+  const batch=req.query.batch;
+
+  const query1=`DELETE FROM student_${batch}_details WHERE id='${id}'`;
+  const query2=`DELETE FROM student_${batch}_documents WHERE id='${id}'`;
+  const namequery=`SELECT name from student_${batch} WHERE id='${id}'`;
+
+  try {
+    const [data1,data2] = await Promise.all([db.promise().query(query1),db.promise().query(query2)]);
+    const name=await db.promise().query(namequery);
+    const path=`C:/uploads/${name[0][0].name}`
+    if (fs.existsSync(path)) {
+      fse.removeSync(path); // Use fs-extra to remove the directory recursively
+      console.log(`Directory ${path} deleted successfully.`);
+  } else {
+      console.log(`Directory ${path} does not exist.`);
+  }
+    return res.status(200).json({ msg: "details, documents and directory deleted"});
+  } catch (error) {
+    return res.status(400).json({ msg: "Something went wrong...", error });
+  }
+}
+
 module.exports = {
   AdminRegister,
   AdminLogin,
   sendVerificationCode,
   search,
   downloadStudentsInfo,
+  deleteStudentsData
 };
