@@ -210,8 +210,22 @@ export const AdminDashboard = () => {
                       <th className="py-4 px-4">S_No</th>
                       <th className="py-4 px-4">ID</th>
                       <th className="py-4 px-4">Name</th>
-                      <th className="py-4 px-4">Admission Category</th>
-                      <th className="py-4 px-4">Status</th>
+                      <th className="py-4 px-4">
+  Admission Category :
+  <select className=" ml-3 p-1 border border-gray-400 rounded mt-1">
+    <option selected >ALL</option>
+    <option >CET</option>
+    <option >COMEDK</option>
+    <option >MQ</option>
+  </select>
+</th>
+                      <th className="py-4 px-4">Status
+                      <select className=" ml-3 p-1 border border-gray-400 rounded mt-1">
+    <option selected >ALL</option>
+    <option > DONE</option>
+    <option >PENDING</option>
+    
+  </select></th>
                     </tr>
                   </thead>
                   <tbody>
