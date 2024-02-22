@@ -103,6 +103,18 @@ const downloadExcel = async (batch) => {
   }
 };
 
+const deleteStudentData = async (batch, id) => {
+  try {
+    const response = await axios.delete(
+      `${baseURL}/students/deletedata?batch=${batch}&id=${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting student data:", error);
+    throw error;
+  }
+};
+
 export {
   fetchStudentData,
   uploadFile,
@@ -113,4 +125,5 @@ export {
   searchStudentData,
   getSingleStudentData,
   downloadExcel,
+  deleteStudentData,
 };

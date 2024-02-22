@@ -298,12 +298,14 @@ const deleteStudentsData = async (req, res) => {
 
   const query1 = `DELETE FROM student_${batch}_details WHERE id='${id}'`;
   const query2 = `DELETE FROM student_${batch}_documents WHERE id='${id}'`;
+  const query3 = `UPDATE student_${batch} SET status=0 WHERE id='${id}'`;
   const namequery = `SELECT name from student_${batch} WHERE id='${id}'`;
 
   try {
-    const [data1, data2] = await Promise.all([
+    const [data1, data2, data3] = await Promise.all([
       db.promise().query(query1),
       db.promise().query(query2),
+      db.promise().query(query3),
     ]);
     const name = await db.promise().query(namequery);
     const path = `C:/uploads/${name[0][0].name}`;
