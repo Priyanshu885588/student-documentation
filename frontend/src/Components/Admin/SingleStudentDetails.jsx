@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getSingleStudentData } from "./services/Api";
-
+import { IoArrowBackCircle } from "react-icons/io5";
 export const SingleStudentDetails = ({ id, batch, handleSingleStudent }) => {
   const [studentData, setStudentData] = useState(null);
   useEffect(() => {
@@ -70,8 +70,6 @@ export const SingleStudentDetails = ({ id, batch, handleSingleStudent }) => {
 </div>
     </div>
       )}
-     
-
     </div>
   );
 };
