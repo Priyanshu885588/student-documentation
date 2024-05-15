@@ -13,7 +13,7 @@ import { GrGroup } from "react-icons/gr";
 import Pagination from "./Pageination";
 import { useNavigate } from "react-router-dom";
 import { SingleStudentDetails } from "./SingleStudentDetails";
-
+import { IoDocumentAttachOutline } from "react-icons/io5";
 export const AdminDashboard = () => {
   const [batch, setBatch] = useState("");
   const [id, setId] = useState("");
@@ -24,6 +24,7 @@ export const AdminDashboard = () => {
   const [batches, setIsbatches] = useState();
   const [pgCount, setpagecount] = useState();
   const [page, setPage] = useState();
+  const [addNewDocumentField, setAddNewDocumentField] = useState(false);
   const navigate = useNavigate();
 
   const fetchData = async (batchData, currentPage) => {
@@ -114,6 +115,59 @@ export const AdminDashboard = () => {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-r from-gray-300 to-gray-100">
+      {addNewDocumentField && (
+        <>
+          <div
+            className="h-[100vh] w-screen fixed top-0 flex justify-end z-50 bg-black/[0.6]"
+            onClick={() => setAddNewDocumentField((prev) => !prev)}
+          ></div>
+          <div className=" h-screen w-[40vw] bg-white flex justify-center z-[80] items-center shadow-2xl background-corner fixed right-0">
+            <div className="w-2/3 h-1/2 rounded-2xl">
+              <form
+                action=""
+                className="flex items-start gap-9 justify-center flex-col w-full"
+              >
+                <div className="w-full">
+                  {" "}
+                  <label
+                    for="Add_Documents"
+                    class="block mb-2 text-sm font-medium text-gray-900 text-left"
+                  >
+                    Enter Document Name
+                  </label>
+                  <input
+                    type="text"
+                    id="Add_Documents"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5"
+                    placeholder="Type new document name"
+                  />
+                </div>
+                <div className="w-full">
+                  <label
+                    for="document-type"
+                    class="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    Select Document type
+                  </label>
+                  <select
+                    id="document-type"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  >
+                    <option selected>Choose a type</option>
+                    <option value="US">image</option>
+                    <option value="CA">pdf</option>
+                  </select>
+                </div>
+                <input
+                  type="submit"
+                  placeholder="Submit"
+                  className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none "
+                />
+              </form>
+            </div>
+          </div>
+        </>
+      )}
       <VerticalNavbar />
       <div className="w-full h-10 flex justify-center items-center ">
         <p className="quicksand text-2xl text-black tracking-widest uppercase mt-2 font-bold">
@@ -141,18 +195,16 @@ export const AdminDashboard = () => {
             </div>
             <div className="bg-white h-full w-1/4 rounded-xl gap-5 shadow-lg flex justify-center items-center">
               <div className="p-3 bg-yellow-100 rounded-full shadow-sm shadow-yellow-700">
-                <FaAccusoft color="#F1B300" size="2.5rem" />
+                <IoDocumentAttachOutline color="#F1B300" size="2.5rem" />
               </div>
-              <div>
-                <p className="text-lg font-bold roboto">
-                  {studentCount.submittedStudents}{" "}
-                  <span className="text-sm font-medium robot text-gray-500">
-                    / {studentCount.totalStudents}
-                  </span>
+              <div
+                className="nunito opacity-75 text-gray-500 text-sm cursor-pointer"
+                onClick={() => setAddNewDocumentField((prev) => !prev)}
+              >
+                <p>
+                  Add new <br></br>Documents field
                 </p>
-                <p className="text-xs nunito opacity-75 text-gray-500">
-                  Total submitted
-                </p>
+                <p>For Batch {batch}</p>
               </div>
             </div>
             <div className="bg-white h-full w-1/4 rounded-xl gap-5 shadow-lg flex justify-center items-center">
@@ -163,7 +215,7 @@ export const AdminDashboard = () => {
                 <SiMicrosoftexcel color="#19794D" size="2.5rem" />
               </div>
               <div className="flex flex-col gap-2 justify-center items-center">
-                <p className="text-xs nunito opacity-75 text-gray-500">
+                <p className="text-base nunito opacity-75 text-gray-500">
                   Download <br /> Excel sheet
                 </p>
               </div>
