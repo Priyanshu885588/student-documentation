@@ -115,6 +115,31 @@ const deleteStudentData = async (batch, id) => {
   }
 };
 
+const addDocumentColumn = async (document, batch) => {
+  try {
+    const response = await axios.post(
+      `${baseURL}/addDocuments?batch=${batch}`,
+      document
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error ", error);
+    throw error;
+  }
+};
+
+const getDocumentColumns = async (batch) => {
+  try {
+    const response = await axios.get(
+      `${baseURL}/getDocumentColumnNames?batch=${batch}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error ", error);
+    throw error;
+  }
+};
+
 export {
   fetchStudentData,
   uploadFile,
@@ -126,4 +151,6 @@ export {
   getSingleStudentData,
   downloadExcel,
   deleteStudentData,
+  addDocumentColumn,
+  getDocumentColumns,
 };

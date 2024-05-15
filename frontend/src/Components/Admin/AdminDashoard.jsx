@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Loading } from "../UI/Loading";
 import { VerticalNavbar } from "./Navbar/VerticalNavbar";
+import { IoMdRefresh } from "react-icons/io";
 import {
+  addDocumentColumn,
   downloadExcel,
   fetchStudentBatches,
   fetchStudentData,
+  getDocumentColumns,
 } from "./services/Api";
 import { PiStudentDuotone } from "react-icons/pi";
 import { FaAccusoft } from "react-icons/fa";
@@ -14,6 +17,8 @@ import Pagination from "./Pageination";
 import { useNavigate } from "react-router-dom";
 import { SingleStudentDetails } from "./SingleStudentDetails";
 import { IoDocumentAttachOutline } from "react-icons/io5";
+import toast, { Toaster } from "react-hot-toast";
+import { FaClipboardList } from "react-icons/fa";
 export const AdminDashboard = () => {
   const [batch, setBatch] = useState("");
   const [id, setId] = useState("");
@@ -25,6 +30,9 @@ export const AdminDashboard = () => {
   const [pgCount, setpagecount] = useState();
   const [page, setPage] = useState();
   const [addNewDocumentField, setAddNewDocumentField] = useState(false);
+  const [inputNewDocument, setInputNewDocument] = useState("");
+  const [documentColumns, setDocumentColumns] = useState([]);
+
   const navigate = useNavigate();
 
   const fetchData = async (batchData, currentPage) => {
@@ -57,14 +65,14 @@ export const AdminDashboard = () => {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // You can also use 'auto' for instant scrolling
+      behavior: "smooth", // You can also use 'auto' htmlFor instant scrolling
     });
     const fetchBatches = async () => {
       try {
         setIsLoading(true);
         const batchesData = await fetchStudentBatches();
         setIsbatches(batchesData);
-        // Assuming you want to initially fetch data for the first batch in the list
+        // Assuming you want to initially fetch data htmlFor the first batch in the list
         if (batchesData.batches.length > 0) {
           setBatch(batchesData.batches[0]);
           fetchData(batchesData.batches[0], 1);
@@ -86,13 +94,38 @@ export const AdminDashboard = () => {
   const handleSingleStudent = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // You can also use 'auto' for instant scrolling
+      behavior: "smooth", // You can also use 'auto' htmlFor instant scrolling
     });
     setId(null);
   };
 
   const handleDownloadExcel = () => {
     downloadExcel(batch);
+  };
+  const handleDocumentList = async () => {
+    try {
+      const data = await getDocumentColumns(batch);
+      setDocumentColumns(data.Column_names);
+    } catch (error) {}
+  };
+  const handleNewDocumentFieldSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await addDocumentColumn(
+        { document: inputNewDocument },
+        batch
+      );
+      if (data.message == "Column already exists") {
+        toast.error(data.message);
+      } else {
+        toast.success(data.message);
+      }
+
+      setInputNewDocument("");
+    } catch (error) {
+      console.log(error.response.data.message);
+      toast.error(error.response.data.message);
+    }
   };
 
   if (loading) {
@@ -115,55 +148,58 @@ export const AdminDashboard = () => {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-r from-gray-300 to-gray-100">
+      <Toaster />
       {addNewDocumentField && (
         <>
           <div
             className="h-[100vh] w-screen fixed top-0 flex justify-end z-50 bg-black/[0.6]"
             onClick={() => setAddNewDocumentField((prev) => !prev)}
           ></div>
-          <div className=" h-screen w-[40vw] bg-white flex justify-center z-[80] items-center shadow-2xl background-corner fixed right-0">
-            <div className="w-2/3 h-1/2 rounded-2xl">
+          <div className=" h-screen w-[40vw] bg-white flex justify-center flex-col z-[80] items-center shadow-2xl background-corner fixed right-0">
+            <div className="w-2/3 rounded-2xl">
               <form
-                action=""
-                className="flex items-start gap-9 justify-center flex-col w-full"
+                onSubmit={handleNewDocumentFieldSubmit}
+                className="flex items-start gap-2 justify-center flex-col w-full"
               >
                 <div className="w-full">
                   {" "}
                   <label
-                    for="Add_Documents"
-                    class="block mb-2 text-sm font-medium text-gray-900 text-left"
+                    htmlFor="Add_Documents"
+                    className="block mb-2 text-sm font-medium text-gray-900 text-left"
                   >
                     Enter Document Name
                   </label>
                   <input
                     type="text"
                     id="Add_Documents"
+                    onChange={(e) => setInputNewDocument(e.target.value)}
+                    value={inputNewDocument}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5"
                     placeholder="Type new document name"
+                    required
                   />
                 </div>
-                <div className="w-full">
-                  <label
-                    for="document-type"
-                    class="block mb-2 text-sm font-medium text-gray-900 "
-                  >
-                    Select Document type
-                  </label>
-                  <select
-                    id="document-type"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  >
-                    <option selected>Choose a type</option>
-                    <option value="US">image</option>
-                    <option value="CA">pdf</option>
-                  </select>
-                </div>
+                <div className="w-full"></div>
                 <input
                   type="submit"
                   placeholder="Submit"
                   className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none "
                 />
               </form>
+            </div>
+            <div className="h-1/2 w-2/3 flex flex-col items-end overflow-y-scroll gap-2">
+              <button
+                className="hover:underline roboto text-sm uppercase flex"
+                onClick={handleDocumentList}
+              >
+                <IoMdRefresh className="text-gray-400 text-lg hover:animate-pulse hover:scale-110" />
+              </button>
+              {documentColumns.length > 0 &&
+                documentColumns.map((document) => (
+                  <ul className="uppercase border border-black py-1 px-2 flex flex-col w-full">
+                    <li className="">{document}</li>
+                  </ul>
+                ))}
             </div>
           </div>
         </>
@@ -204,7 +240,7 @@ export const AdminDashboard = () => {
                 <p>
                   Add new <br></br>Documents field
                 </p>
-                <p>For Batch {batch}</p>
+                <p>htmlFor Batch {batch}</p>
               </div>
             </div>
             <div className="bg-white h-full w-1/4 rounded-xl gap-5 shadow-lg flex justify-center items-center">
@@ -272,8 +308,12 @@ export const AdminDashboard = () => {
                       <th className="py-4 px-4">Name</th>
                       <th className="py-4 px-4">
                         Admission Category :
-                        <select className=" ml-3 p-1 border border-gray-400 rounded mt-1">
-                          <option selected>ALL</option>
+                        <select
+                          className=" ml-3 p-1 border border-gray-400 rounded mt-1"
+                          value="ALL"
+                          readOnly
+                        >
+                          <option value="ALL">ALL</option>
                           <option>CET</option>
                           <option>COMEDK</option>
                           <option>MQ</option>
@@ -281,8 +321,12 @@ export const AdminDashboard = () => {
                       </th>
                       <th className="py-4 px-4">
                         Status
-                        <select className=" ml-3 p-1 border border-gray-400 rounded mt-1">
-                          <option selected>ALL</option>
+                        <select
+                          className=" ml-3 p-1 border border-gray-400 rounded mt-1"
+                          readOnly
+                          value="All"
+                        >
+                          <option value="ALL">ALL</option>
                           <option> DONE</option>
                           <option>PENDING</option>
                         </select>
