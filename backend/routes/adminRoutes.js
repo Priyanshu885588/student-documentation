@@ -7,7 +7,8 @@ const {
   sendVerificationCode,
   search,
   downloadStudentsInfo,
-  deleteStudentsData
+  deleteStudentsData,
+  addNewDocument
 } = require("../controllers/adminController");
 const authenticationMiddleware = require("../middleware/auth");
 
@@ -21,5 +22,7 @@ router.route("/students/search").get(studentController.search);
 router.route("/students/batches").get(studentController.getAllBatches);
 router.route("/students/deletedata").delete(deleteStudentsData)
 router.route("/getuploadedinfo").get(studentController.get_student_data);
+router.route("/addDocuments").post(addNewDocument);
+
 
 module.exports = router;

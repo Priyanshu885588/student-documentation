@@ -322,6 +322,38 @@ const deleteStudentsData = async (req, res) => {
     return res.status(400).json({ msg: "Something went wrong...", error });
   }
 };
+const addNewDocument = async(req,res)=>{
+
+  const document = req.body.document;
+  console.log(document);
+  const batch = req.query.batch;
+  console.log(batch);
+  try {
+    
+    const columnCheckQuery = `
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_name = student_${batch}_documents AND column_name = ?;
+  `;
+
+  const rows = db.query(columnCheckQuery, [document]);
+  if (rows.length != 0) {
+    return res.status(201).json({message:"Column already exists"});
+  }
+        // If column does not exist, add it
+        const alterTableQuery = `ALTER TABLE student_${batch}_documents ADD COLUMN ${document} VARCHAR(50);`;
+        await db.promise().query(alterTableQuery);
+      
+    
+    return res.status(200).json({ message: 'Column added successfully' });
+  } catch (error) {
+     
+    console.error('Error adding column:', error);
+    return res.status(500).json({ message: 'Error adding column', error });
+  } 
+  
+
+}
 
 module.exports = {
   AdminRegister,
@@ -330,4 +362,5 @@ module.exports = {
   search,
   downloadStudentsInfo,
   deleteStudentsData,
+  addNewDocument
 };
