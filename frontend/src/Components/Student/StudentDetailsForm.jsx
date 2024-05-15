@@ -65,6 +65,10 @@ const StudentDetailsForm = () => {
       validationSchema: studentDetailsSchema,
       onSubmit: async (values) => {
         const data = await studentDetailsUpload({ ...values, batch });
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
         fetchStudentDetails();
       },
     });
@@ -384,7 +388,7 @@ const StudentDetailsForm = () => {
 
         <div className="bg-yellow-200 text-white py-4 text-center my-5  max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-LEFT text-black mx-10">
-            Acamadic Details
+            Academic Details
           </h1>
         </div>
         <div className="grid md:grid-cols-2 md:gap-24 max-w-4xl mt-5 mb-5 mx-auto ">

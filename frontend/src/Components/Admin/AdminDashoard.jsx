@@ -54,6 +54,10 @@ export const AdminDashboard = () => {
   };
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // You can also use 'auto' for instant scrolling
+    });
     const fetchBatches = async () => {
       try {
         setIsLoading(true);
@@ -79,6 +83,10 @@ export const AdminDashboard = () => {
   }, []);
 
   const handleSingleStudent = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // You can also use 'auto' for instant scrolling
+    });
     setId(null);
   };
 

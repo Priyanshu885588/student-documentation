@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { deleteStudentData, getSingleStudentData } from "./services/Api";
+import { getSingleStudentData } from "./services/Api";
 import { useNavigate } from "react-router-dom";
+import { IoMdArrowBack } from "react-icons/io";
 
 export const SingleStudentDetails = ({ id, batch, handleSingleStudent }) => {
   const [studentData, setStudentData] = useState(null);
@@ -19,13 +20,6 @@ export const SingleStudentDetails = ({ id, batch, handleSingleStudent }) => {
     };
     fetchData();
   }, []);
-
-  const handleDelete = async () => {
-    try {
-      const data = await deleteStudentData(batch, id);
-      handleSingleStudent();
-    } catch (error) {}
-  };
 
   return (
     <div className="flex justify-center flex-col items-center ">
@@ -56,42 +50,8 @@ export const SingleStudentDetails = ({ id, batch, handleSingleStudent }) => {
               onClick={handleSingleStudent}
               className="back-button m-5 flex items-center justify-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md shadow-md transition duration-300 ease-in-out"
             >
-              <svg
-                className="w-6 h-6 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
+              <IoMdArrowBack />
               Back
-            </button>
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="delete-button m-5 flex items-center justify-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md shadow-md transition duration-300 ease-in-out"
-            >
-              <svg
-                className="w-6 h-6 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              Delete
             </button>
           </div>
         </div>
@@ -105,20 +65,7 @@ export const SingleStudentDetails = ({ id, batch, handleSingleStudent }) => {
             onClick={handleSingleStudent}
             className="back-button m-5 flex items-center justify-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md shadow-md transition duration-300 ease-in-out"
           >
-            <svg
-              className="w-6 h-6 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
+            <IoMdArrowBack />
             Back
           </button>
         </div>
