@@ -17,7 +17,6 @@ body {
 .rnsit-logo {
   background-image: url(assests/rnsit-logo.png);
   background-size: 96px;
-  
 }
 
 .homepage-bg-light {
@@ -45,7 +44,7 @@ body {
 }
 .zoom-rev {
   position: absolute;
-  background-color:  rgba(0, 0, 0, 0.642);
+  background-color: rgba(0, 0, 0, 0.642);
   width: 8rem;
   height: 9.5rem;
   animation: zoom-reverse 1.5s ease-in-out;
@@ -54,10 +53,10 @@ body {
 }
 .zoom-thank {
   position: absolute;
-  background-color:  rgba(0, 0, 0, 0.642);
+  background-color: rgba(0, 0, 0, 0.642);
   width: 8rem;
   height: 9.5rem;
-  animation: zoom-thankyou 1s ease-in-out  ;
+  animation: zoom-thankyou 1s ease-in-out;
   border-radius: 8px;
   z-index: 2;
 }
@@ -86,13 +85,8 @@ body {
 
   100% {
     transform: scale(3);
-    
-    
   }
 }
-
-
-
 
 .upward-move {
   position: absolute;
@@ -113,36 +107,34 @@ body {
   }
 }
 
-.login_box{
-  position:absolute;
+.login_box {
+  position: absolute;
   z-index: 10;
   width: 384px;
   background: rgba(0, 0, 0, 0.642);
-  border: 2px solid ;
+  border: 2px solid;
   border-color: lightskyblue;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.06);
- backdrop-filter:  blur(40px) ;
-  color: #fff; 
-  border-radius: 1rem; 
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(40px);
+  color: #fff;
+  border-radius: 1rem;
   padding: 2rem;
-  
-  animation: loginbox 2s  ;
+
+  animation: loginbox 2s;
 }
 @keyframes loginbox {
-  0%{
+  0% {
     opacity: 0;
     background: transparent;
-}
- 5%{
-  opacity: 0;
-  background: transparent;
-  
-}
-  100%{
-    opacity: 1;
-   
   }
-  
+  5% {
+    opacity: 0;
+    background: transparent;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 @keyframes fade-in {
   from {
@@ -153,166 +145,69 @@ body {
   }
 }
 
-.animate-fade-in {
-  animation: fade-in 1s ease-out;
-}
-/**
- * Extracted from: SweetAlert
- * Modified by: Istiak Tridip
- */
- .success-checkmark {
-  width: 80px;
-  height: 115px;
-  margin: 0 auto;
-  
-  .check-icon {
-      width: 80px;
-      height: 80px;
-      position: relative;
-      border-radius: 50%;
-      box-sizing: content-box;
-      border: 4px solid #4CAF50;
-      
-      &::before {
-          top: 3px;
-          left: -2px;
-          width: 30px;
-          transform-origin: 100% 50%;
-          border-radius: 100px 0 0 100px;
-      }
-      
-      &::after {
-          top: 0;
-          left: 30px;
-          width: 60px;
-          transform-origin: 0 50%;
-          border-radius: 0 100px 100px 0;
-          animation: rotate-circle 4.25s ease-in;
-      }
-      
-      &::before, &::after {
-          content: '';
-          height: 100px;
-          position: absolute;
-          background: transparent;
-          transform: rotate(-45deg);
-      }
-      
-      .icon-line {
-          height: 5px;
-          background-color: #4CAF50;
-          display: block;
-          border-radius: 2px;
-          position: absolute;
-          z-index: 10;
-          
-          &.line-tip {
-              top: 46px;
-              left: 14px;
-              width: 25px;
-              transform: rotate(45deg);
-              animation: icon-line-tip 0.75s;
-          }
-          
-          &.line-long {
-              top: 38px;
-              right: 8px;
-              width: 47px;
-              transform: rotate(-45deg);
-              animation: icon-line-long 0.75s;
-          }
-      }
-      
-      .icon-circle {
-          top: -4px;
-          left: -4px;
-          z-index: 10;
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          position: absolute;
-          box-sizing: content-box;
-          border: 4px solid rgba(76, 175, 80, .5);
-          
-      }
-      
-      .icon-fix {
-          top: 8px;
-          width: 5px;
-          left: 26px;
-          z-index: 1;
-          height: 85px;
-          position: absolute;
-          transform: rotate(-45deg);
-          background-color: transparent;
-          
-      }
-  }
-}
-
 @keyframes rotate-circle {
   0% {
-      transform: rotate(-45deg);
+    transform: rotate(-45deg);
   }
-  
-  20%{
+
+  20% {
     transform: rotate(-45deg);
   }
   80% {
-      transform: rotate(-405deg);
+    transform: rotate(-405deg);
   }
   100% {
-      transform: rotate(-405deg);
+    transform: rotate(-405deg);
   }
 }
 
 @keyframes icon-line-tip {
   0% {
-      width: 0;
-      left: 1px;
-      top: 19px;
+    width: 0;
+    left: 1px;
+    top: 19px;
   }
   64% {
-      width: 0;
-      left: 1px;
-      top: 19px;
+    width: 0;
+    left: 1px;
+    top: 19px;
   }
   80% {
-      width: 50px;
-      left: -8px;
-      top: 37px;
+    width: 50px;
+    left: -8px;
+    top: 37px;
   }
   94% {
-      width: 17px;
-      left: 21px;
-      top: 48px;
+    width: 17px;
+    left: 21px;
+    top: 48px;
   }
   100% {
-      width: 25px;
-      left: 14px;
-      top: 45px;
+    width: 25px;
+    left: 14px;
+    top: 45px;
   }
 }
 
 @keyframes icon-line-long {
   0% {
-      width: 0;
-      right: 46px;
-      top: 54px;
+    width: 0;
+    right: 46px;
+    top: 54px;
   }
   75% {
-      width: 0;
-      right: 46px;
-      top: 54px;
+    width: 0;
+    right: 46px;
+    top: 54px;
   }
   84% {
-      width: 55px;
-      right: 0px;
-      top: 35px;
+    width: 55px;
+    right: 0px;
+    top: 35px;
   }
   100% {
-      width: 47px;
-      right: 8px;
-      top: 38px;
+    width: 47px;
+    right: 8px;
+    top: 38px;
   }
 }

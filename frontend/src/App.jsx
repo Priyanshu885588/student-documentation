@@ -6,6 +6,7 @@ import StudentDetailsForm from "./Components/Student/StudentDetailsForm";
 import { StudentDocuments } from "./Components/Student/StudentDocuments";
 import { PrivateRoute } from "./Components/Student/PrivateRoute";
 import { ThankYou } from "./Components/Student/ThankYou";
+
 function App() {
   return (
     <Router>
