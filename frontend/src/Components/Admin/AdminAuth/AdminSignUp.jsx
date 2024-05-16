@@ -9,7 +9,7 @@ import { IoCheckmarkDone } from "react-icons/io5";
 import { adminSignUp } from "../services/Api";
 import { Loading } from "../../UI/Loading";
 
-export const AdminSignUp = ({ toggleSignUp }) => {
+const AdminSignUp = ({ toggleSignUp }) => {
   const [verification, setVerification] = useState(false);
   const [verificationLoading, setVerificationLoading] = useState(false);
   const [loading, isLoading] = useState(false);
@@ -209,3 +209,5 @@ export const AdminSignUp = ({ toggleSignUp }) => {
     </div>
   );
 };
+
+export default AdminSignUp;
