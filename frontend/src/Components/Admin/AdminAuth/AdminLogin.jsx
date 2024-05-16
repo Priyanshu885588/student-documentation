@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { adminLogin } from "../services/Api";
-import { AdminSignUp } from "./AdminSignup";
 import { FaUserCircle } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Loading } from "../../UI/Loading";
 import { toast } from "react-hot-toast";
+import AdminSignUp from "./AdminSignUp";
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
