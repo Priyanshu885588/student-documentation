@@ -30,5 +30,4 @@ jobs:
         touch .env
         echo "${{ secrets.PROD_ENV }}" > .env
       working-directory: ./backend
-    - name: Build the project
      
