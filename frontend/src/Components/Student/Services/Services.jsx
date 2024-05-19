@@ -93,7 +93,7 @@ const getDocumentsList = async (batch) => {
   }
 };
 
-const getDocumentURL = async (batch,fileName) =>{
+const getDocumentURL = async (batch, fileName) => {
   try {
     const token = localStorage.getItem("studentToken");
     const config = {
@@ -109,17 +109,16 @@ const getDocumentURL = async (batch,fileName) =>{
   } catch (error) {
     throw error;
   }
-}
+};
 
-const uploadDocument = async (url,file) =>{
+const uploadDocument = async (url, file) => {
   try {
-
-    const response = await axios.put(url);
-    return response.data;
+    console.log(file);
+    await axios.put(url, file);
   } catch (error) {
     throw error;
   }
-}
+};
 export {
   studentLogin,
   studentDetailsUpload,
@@ -128,4 +127,5 @@ export {
   getDocumentsDetails,
   getDocumentsList,
   getDocumentURL,
+  uploadDocument,
 };

@@ -3,14 +3,23 @@ import { documentsUpload } from "./Services/Services";
 import { getDocumentURL } from "./Services/Services";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { getDocumentsDetails, getDocumentsList } from "./Services/Services";
+import toast, { Toaster } from "react-hot-toast";
+
+import {
+  getDocumentsDetails,
+  getDocumentsList,
+  uploadDocument,
+} from "./Services/Services";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import axios from "axios";
+
 export const StudentDocuments = () => {
   const { batch } = useParams();
   const [overlay, setOverlay] = useState(false);
   const navigate = useNavigate();
   const [files, setFiles] = useState(null);
   const [currentFile, setCurrentFIle] = useState();
+  const [docLoading, setDocLoading] = useState(false);
 
   const handleFileChange = (event, field) => {
     const file = event.target.files[0];
@@ -61,19 +70,41 @@ export const StudentDocuments = () => {
     navigate("/");
   };
 
-  const submitHandler = async (e) =>{
+  const submitHandler = async (e) => {
+    setDocLoading(true);
     e.preventDefault();
-    console.log(currentFile);
-    try {
-      const data = await getDocumentURL(batch,currentFile);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
+    const formData = new FormData(e.target);
+    const file = formData.get("file");
+
+    if (!file) {
+      console.error("No file selected");
+      return;
     }
-  }
+
+    console.log(file);
+
+    try {
+      const data = await getDocumentURL(batch, currentFile);
+      console.log(data.url);
+
+      // Now upload the file using the obtained URL
+      await axios.put(data.url, file, {
+        headers: {
+          "Content-Type": "application/pdf",
+        },
+      });
+      toast.success("File uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading file", error);
+      toast.error("File uploading failed");
+    } finally {
+      setDocLoading(false);
+    }
+  };
 
   return (
     <>
+      <Toaster />
       {overlay && (
         <div className="fixed h-screen w-screen backdrop-blur-md flex justify-center items-center">
           <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -97,6 +128,11 @@ export const StudentDocuments = () => {
           </div>
         </div>
       )}
+      {docLoading && (
+        <div className="min-h-screen fixed top-0 z-50 bg-black/[0.9] text-white w-screen flex justify-center items-center">
+          <AiOutlineLoading3Quarters className="animate-spin w-6 h-6" />
+        </div>
+      )}
       <div className="bg-white min-h-screen justify-center items-center">
         <div className="bg-cyan-900 text-white py-4">
           <h1 className="text-3xl font-bold text-center">
@@ -116,7 +152,11 @@ export const StudentDocuments = () => {
           <div className="max-w-4xl mx-auto flex flex-wrap">
             {files &&
               Object.keys(files).map((key) => (
-                <form key={key} className="flex flex-col gap-2 p-7 w-1/2" onSubmit={submitHandler}>
+                <form
+                  key={key}
+                  className="flex flex-col gap-2 p-7 w-1/2"
+                  onSubmit={submitHandler}
+                >
                   <div className="px-2 w-full Roboto roboto border-l-2 border-black flex justify-between">
                     <p>{key}</p>
 
@@ -128,20 +168,14 @@ export const StudentDocuments = () => {
                       >
                         Upload
                       </button>
-
-                      {currentFile == key && (
-                        <div className="animate-bounce">
-                          <AiOutlineLoading3Quarters className="animate-spin" />
-                        </div>
-                      )}
                     </div>
                   </div>
                   <input
                     type="file"
-                    name={key}
+                    name="file"
                     id={key}
                     className="block w-full cursor-pointer border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 file:bg-gray-50 file:border-0 file:me-4 file:py-3 file:px-4 file:sm:py-5 dark:file:bg-gray-700 dark:file:text-gray-400"
-                    onChange={(event) => handleFileChange(event, key)}
+                    accept="application/pdf"
                     required
                   />
                 </form>
