@@ -80,10 +80,22 @@ const getDocumentsDetails = async (batch) => {
     throw error;
   }
 };
+
+const getDocumentsList = async (batch) => {
+  try {
+    const response = await axios.get(
+      `${baseURL}/admin/getDocumentColumnNames?batch=${batch}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 export {
   studentLogin,
   studentDetailsUpload,
   getStudentDetails,
   documentsUpload,
   getDocumentsDetails,
+  getDocumentsList,
 };

@@ -167,7 +167,10 @@ export const AdminDashboard = () => {
                     htmlFor="Add_Documents"
                     className="block mb-2 text-sm font-medium text-gray-900 text-left"
                   >
-                    Enter Document Name
+                    Enter Document Name <br />
+                    <span className="text-red-500 font-extralight text-sm">
+                      Remember not to add space in between words
+                    </span>
                   </label>
                   <input
                     type="text"
@@ -195,8 +198,11 @@ export const AdminDashboard = () => {
                 <IoMdRefresh className="text-gray-400 text-lg hover:animate-pulse hover:scale-110" />
               </button>
               {documentColumns.length > 0 &&
-                documentColumns.map((document) => (
-                  <ul className="uppercase border border-black py-1 px-2 flex flex-col w-full">
+                documentColumns.map((document, index) => (
+                  <ul
+                    className="uppercase border border-black py-1 px-2 flex flex-col w-full"
+                    key={index}
+                  >
                     <li className="">{document}</li>
                   </ul>
                 ))}
