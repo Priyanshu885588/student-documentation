@@ -1,4 +1,5 @@
 require("dotenv").config();
+const db = require("../db/db");
 const {S3Client,GetObjectCommand,PutObjectCommand} = require("@aws-sdk/client-s3");
 const {getSignedUrl} = require("@aws-sdk/s3-request-presigner");
 
@@ -31,14 +32,22 @@ const putObject = async (filename,contentType)=>{
 
 const GetUploadUrl = async (req,res)=>{
     const { uniqueid } = req.user;
-    const {batch,name,fileName} = req.query;
-    const underscoreSeparatedName = name.replace(/ /g, '_');
-    console.log(underscoreSeparatedName);
-    const Name = uniqueid + "_" + underscoreSeparatedName;
-    const path = batch + "/" + Name + "/" + fileName;
+    const {batch,fileName} = req.query;
+    // const underscoreSeparatedName = name.replace(/ /g, '_');
+    // console.log(underscoreSeparatedName);
+    // const Name = uniqueid + "_" + underscoreSeparatedName;
+    // const path = batch + "/" + Name + "/" + fileName;
     try {
+      const Student = await db
+      .promise()
+      .query(`SELECT name FROM student_${batch} where id = ?`,[uniqueid]);
+      const name = Student[0][0].name;
+      const underscoreSeparatedName = name.replace(/ /g, '_');
+    //   console.log(underscoreSeparatedName);
+      const Name = uniqueid + "_" + underscoreSeparatedName;
+      const path = batch + "/" + Name + "/" + fileName;
       const url =  await putObject(path,"application/pdf");
-      console.log(url);
+    //   console.log(url);
       res.json({url:url});
     }catch (error) {
      res.json(error);
