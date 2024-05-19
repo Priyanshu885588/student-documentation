@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const baseURL = "http://34.228.8.172/api/v1/admin";
+// const baseURL = "http://34.228.8.172/api/v1/admin";
+const baseURL = "http://localhost:3000/api/v1/admin";
 
 const fetchStudentData = async (data) => {
   try {

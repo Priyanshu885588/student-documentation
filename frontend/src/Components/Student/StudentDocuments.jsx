@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { documentsUpload } from "./Services/Services";
+import { getDocumentURL } from "./Services/Services";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { getDocumentsDetails, getDocumentsList } from "./Services/Services";
@@ -60,6 +61,17 @@ export const StudentDocuments = () => {
     navigate("/");
   };
 
+  const submitHandler = async (e) =>{
+    e.preventDefault();
+    console.log(currentFile);
+    try {
+      const data = await getDocumentURL(batch,currentFile);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       {overlay && (
@@ -104,14 +116,14 @@ export const StudentDocuments = () => {
           <div className="max-w-4xl mx-auto flex flex-wrap">
             {files &&
               Object.keys(files).map((key) => (
-                <form key={key} className="flex flex-col gap-2 p-7 w-1/2">
+                <form key={key} className="flex flex-col gap-2 p-7 w-1/2" onSubmit={submitHandler}>
                   <div className="px-2 w-full Roboto roboto border-l-2 border-black flex justify-between">
                     <p>{key}</p>
 
                     <div className="flex items-center justify-center gap-3">
                       <button
                         className="px-2 py-1 rounded-lg bg-black text-white text-sm active:scale-90"
-                        type="button"
+                        type="submit"
                         onClick={() => setCurrentFIle(key)}
                       >
                         Upload

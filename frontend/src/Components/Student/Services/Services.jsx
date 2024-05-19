@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const baseURL = "http://34.228.8.172/api/v1";
+// const baseURL = "http://34.228.8.172/api/v1";
+const baseURL = "http://localhost:3000/api/v1";
 
 const studentLogin = async (data, batch) => {
   try {
@@ -91,6 +92,34 @@ const getDocumentsList = async (batch) => {
     throw error;
   }
 };
+
+const getDocumentURL = async (batch,fileName) =>{
+  try {
+    const token = localStorage.getItem("studentToken");
+    const config = {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(
+      `${baseURL}/document/getUploadurl?batch=${batch}&fileName=${fileName}`,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+const uploadDocument = async (url,file) =>{
+  try {
+
+    const response = await axios.put(url);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 export {
   studentLogin,
   studentDetailsUpload,
@@ -98,4 +127,5 @@ export {
   documentsUpload,
   getDocumentsDetails,
   getDocumentsList,
+  getDocumentURL,
 };
