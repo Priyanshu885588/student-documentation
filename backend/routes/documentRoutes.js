@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
+const auth = require("../middleware/auth");
 
-const {temp} = require("../controllers/documentation")
+const {GetUploadUrl} = require("../controllers/documentation")
 
-router.route("/getUploadurl").get(temp);
+router.route("/getUploadurl").get(auth.authenticationMiddleware,GetUploadUrl);
 
 module.exports = router;
 

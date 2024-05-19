@@ -22,22 +22,27 @@ const s3Client = new S3Client({
 const putObject = async (filename,contentType)=>{
     const command = new PutObjectCommand({
         Bucket:"studentdocumentsrnsit",
-        Key:`2021/Mandani/${filename}`,
+        Key:`${filename}`,
         ContentType:contentType, 
     });
     const url = await getSignedUrl(s3Client,command);
     return url;
 }
 
-const temp = async (req,res)=>{
+const GetUploadUrl = async (req,res)=>{
+    const { uniqueid } = req.user;
+    const {batch,name,fileName} = req.query;
+    const underscoreSeparatedName = name.replace(/ /g, '_');
+    console.log(underscoreSeparatedName);
+    const Name = uniqueid + "_" + underscoreSeparatedName;
+    const path = batch + "/" + Name + "/" + fileName;
     try {
-       console.log(process.env.JWT_SECRET);
-      const url =  await putObject("DateOfBirth.jpeg","image/jpeg");
+      const url =  await putObject(path,"application/pdf");
       console.log(url);
-       res.json({url:url});
-   } catch (error) {
+      res.json({url:url});
+    }catch (error) {
      res.json(error);
-   }
+    }
 }
 
-module.exports = {temp};
+module.exports = {GetUploadUrl};
