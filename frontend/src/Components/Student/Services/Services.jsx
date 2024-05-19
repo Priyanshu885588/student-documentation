@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://student-documentation.onrender.com/api/v1";
+const baseURL = "http://34.228.8.172/api/v1";
 
 const studentLogin = async (data, batch) => {
   try {
