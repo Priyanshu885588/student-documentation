@@ -238,74 +238,35 @@ const getStudentDetails = async (req, res) => {
 };
 
 const documentsUpload = async (req, res) => {
-  const { uniqueid } = req.user;
-  const batch = req.query.batch;
-  var data;
+  const key=req.body.key;
+  const colName=req.body.fileName;
+  const {batch}=req.query;
+  
+  const {uniqueid}=req.user;
+  var query;
+  
+  const checkQuery= `SELECT COUNT(*) as count FROM student_${batch}_documents WHERE id = ?`;
+    
+    const [rows] = await db.promise().query(checkQuery, [uniqueid]);
+    const count = rows[0].count;
+  
+  if(count>0)
+    {
+      query=`UPDATE student_${batch}_documents SET ${colName}="${key}" WHERE id=? `;
+    }
+    else{
+      query=`INSERT INTO student_${batch}_documents(id,${colName}) values("${uniqueid}","${key}")`;
+    }
 
-  const namequery = `select name from student_${batch} where id='${uniqueid}'`;
-  try {
-    data = await db.promise().query(namequery);
-    console.log("name received", data);
-  } catch (error) {
-    return res.status(400).json({ msg: "Something went wrong...", error });
+  try{
+    await db.promise().query(query,[uniqueid]);
+
+    res.status(200).json({ msg: "document key uploaded successfully!!!" });
+
   }
-  const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      const uploadDir = path.join("C:", "uploads");
-
-      if (!fs.existsSync(uploadDir)) {
-        // If not, create the directory
-        fs.mkdirSync(uploadDir);
-      }
-
-      const uploadDirWithName = path.join("C:", "uploads", data[0][0].name);
-      // Check if the directory exists
-      if (!fs.existsSync(uploadDirWithName)) {
-        // If not, create the directory
-        fs.mkdirSync(uploadDirWithName);
-      }
-
-      cb(null, uploadDirWithName);
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.originalname); // Specify how the uploaded files will be named
-    },
-  });
-
-  const upload = multer({ storage: storage });
-  upload.array("documents")(req, res, async function (err) {
-    if (err) {
-      return res.status(500).send("invalid documents");
-    }
-
-    const uploadedFiles = req.files;
-    if (uploadedFiles.length != 6) {
-      return res.status(500).json({ msg: "Please enter all the documents" });
-    }
-    console.log(uploadedFiles);
-
-    const filepaths = uploadedFiles.map((file) => file.path);
-    console.log(filepaths);
-    const values = uploadedFiles
-      .map(
-        (file) => `'${file.destination.replace(/\\/g, "/")}/${file.filename}'`
-      )
-      .join(", ");
-
-    // Save the file paths to the database or perform other actions
-    const query = `insert into student_${batch}_documents values ('${uniqueid}',${values})`;
-    const query1 = `UPDATE student_${batch} SET status=1 WHERE id='${uniqueid}'`;
-
-    try {
-      const [data1, data2] = await Promise.all([
-        db.promise().query(query),
-        db.promise().query(query1),
-      ]);
-      return res.status(200).json({ msg: "documents uploaded successfully" });
-    } catch (error) {
-      return res.status(400).json({ msg: "Something went wrong...", error });
-    }
-  });
+  catch(error){
+    res.status(400).json({ msg: "something went wrong", error });
+  }
 };
 
 const get_student_data = async (req, res) => {
