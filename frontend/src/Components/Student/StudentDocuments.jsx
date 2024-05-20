@@ -4,13 +4,10 @@ import { getDocumentURL } from "./Services/Services";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-
-import {
-  getDocumentsDetails,
-  getDocumentsList,
-  uploadDocument,
-} from "./Services/Services";
+import { FaCircleInfo } from "react-icons/fa6";
+import { getDocumentsDetails } from "./Services/Services";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { Tooltip, Button } from "@material-tailwind/react";
 import axios from "axios";
 
 export const StudentDocuments = () => {
@@ -20,36 +17,6 @@ export const StudentDocuments = () => {
   const [files, setFiles] = useState(null);
   const [currentFile, setCurrentFIle] = useState();
   const [docLoading, setDocLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchDocDetails = async () => {
-      try {
-        const result1 = await getDocumentsList(batch);
-        const data = await getDocumentsDetails(batch);
-
-        const filteredColumnNames = result1.Column_names.filter(
-          (name) => name !== "id"
-        );
-        const result = filteredColumnNames.reduce((obj, key) => {
-          obj[key] = null;
-          return obj;
-        }, {});
-        setFiles(result);
-        
-        console.log(data);
-        
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchDocDetails();
-  }, []);
-
-  const handlelogout = () => {
-    localStorage.removeItem("studentToken");
-    navigate("/");
-  };
-
   const submitHandler = async (e) => {
     setDocLoading(true);
     e.preventDefault();
@@ -61,12 +28,8 @@ export const StudentDocuments = () => {
       return;
     }
 
-    
-
     try {
       const data = await getDocumentURL(batch, currentFile);
-      
-
 
       // Now upload the file using the obtained URL
       await axios.put(data.url, file, {
@@ -74,7 +37,10 @@ export const StudentDocuments = () => {
           "Content-Type": "application/pdf",
         },
       });
-      const msg = await documentsUpload({key:data.path,fileName:currentFile},batch);
+      const msg = await documentsUpload(
+        { key: data.path, fileName: currentFile },
+        batch
+      );
       console.log(msg);
       toast.success("File uploaded successfully");
     } catch (error) {
@@ -83,6 +49,24 @@ export const StudentDocuments = () => {
     } finally {
       setDocLoading(false);
     }
+  };
+  useEffect(() => {
+    const fetchDocDetails = async () => {
+      try {
+        const data = await getDocumentsDetails(batch);
+        const { id, ...rest } = data;
+        console.log(rest);
+        setFiles(rest);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDocDetails();
+  }, [submitHandler]);
+
+  const handlelogout = () => {
+    localStorage.removeItem("studentToken");
+    navigate("/");
   };
 
   return (
@@ -136,13 +120,11 @@ export const StudentDocuments = () => {
               Object.keys(files).map((key) => (
                 <form
                   key={key}
-                  
                   className="flex flex-col gap-2 p-7 w-1/2"
                   onSubmit={submitHandler}
                 >
                   <div className="px-2 w-full Roboto roboto border-l-2 border-black flex justify-between">
                     <p>{key}</p>
-                    
 
                     <div className="flex items-center justify-center gap-3">
                       <button
@@ -162,7 +144,21 @@ export const StudentDocuments = () => {
                     accept="application/pdf"
                     required
                   />
-                  <p>{key}</p>
+                  {files[key] && (
+                    <div className="flex gap-2">
+                      <p className="text-sm quicksand text-red-500">
+                        Document alerady uploaded
+                      </p>
+
+                      <div class="group relative cursor-pointer">
+                        <FaCircleInfo />
+                        <span class="tooltip w-48 absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out text-sm bg-gray-800/[0.8] text-white/[0.8] px-2 py-1 rounded-md shadow-md">
+                          Are you sure you want to replace the existing
+                          document?
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </form>
               ))}
             <div className="grid md:grid-cols-2 md:gap-10 px-10">
