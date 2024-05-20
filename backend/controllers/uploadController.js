@@ -31,6 +31,7 @@ const uploadExcel = (req, res) => {
 
       // Insert data into the corresponding table based on the batch
       studentModel.insertStudent(batch, name, admissionCategory);
+      
     }
     studentModel.createStudentDetailsTable(batch);
     studentModel.createStudentDocumentsTable(batch);
