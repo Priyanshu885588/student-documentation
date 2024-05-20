@@ -21,26 +21,6 @@ export const StudentDocuments = () => {
   const [currentFile, setCurrentFIle] = useState();
   const [docLoading, setDocLoading] = useState(false);
 
-  const handleFileChange = (event, field) => {
-    const file = event.target.files[0];
-    setFiles({ ...files, [field]: file });
-  };
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData();
-    Object.values(files).forEach((file) => {
-      formData.append("documents", file); // Append files to the FormData object with the key "documents"
-    });
-
-    try {
-      // const response = await documentsUpload(formData, batch);
-      // navigate("/thankyou");
-    } catch (error) {
-      console.error("Upload failed:", error);
-    }
-  };
-
   useEffect(() => {
     const fetchDocDetails = async () => {
       try {
@@ -141,7 +121,6 @@ export const StudentDocuments = () => {
         </div>
         <div
           className="mx-36 p-5 px-16 bg-slate-100"
-          onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
           <div className="bg-yellow-200 text-white py-4 text-center my-5 max-w-4xl mx-auto">
@@ -196,7 +175,7 @@ export const StudentDocuments = () => {
                 </div>
               </div>
               <button
-                type="submit"
+                onClick={() => navigate("/thankyou")}
                 className="mt-7 mb-10 ml-56 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm w-24 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 Submit
