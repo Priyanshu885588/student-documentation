@@ -35,9 +35,9 @@ export const StudentDocuments = () => {
           return obj;
         }, {});
         setFiles(result);
-        if (data) {
-          setOverlay(true);
-        }
+        
+        console.log(data);
+        
       } catch (error) {
         console.log(error);
       }
@@ -61,11 +61,12 @@ export const StudentDocuments = () => {
       return;
     }
 
-    console.log(file);
+    
 
     try {
       const data = await getDocumentURL(batch, currentFile);
-      console.log(data.url);
+      
+
 
       // Now upload the file using the obtained URL
       await axios.put(data.url, file, {
@@ -73,6 +74,8 @@ export const StudentDocuments = () => {
           "Content-Type": "application/pdf",
         },
       });
+      const msg = await documentsUpload({key:data.path,fileName:currentFile},batch);
+      console.log(msg);
       toast.success("File uploaded successfully");
     } catch (error) {
       console.error("Error uploading file", error);
@@ -133,11 +136,13 @@ export const StudentDocuments = () => {
               Object.keys(files).map((key) => (
                 <form
                   key={key}
+                  
                   className="flex flex-col gap-2 p-7 w-1/2"
                   onSubmit={submitHandler}
                 >
                   <div className="px-2 w-full Roboto roboto border-l-2 border-black flex justify-between">
                     <p>{key}</p>
+                    
 
                     <div className="flex items-center justify-center gap-3">
                       <button
@@ -157,6 +162,7 @@ export const StudentDocuments = () => {
                     accept="application/pdf"
                     required
                   />
+                  <p>{key}</p>
                 </form>
               ))}
             <div className="grid md:grid-cols-2 md:gap-10 px-10">
