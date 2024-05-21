@@ -41,7 +41,6 @@ export const StudentDocuments = () => {
         { key: data.path, fileName: currentFile },
         batch
       );
-      console.log(msg);
       toast.success("File uploaded successfully");
     } catch (error) {
       console.error("Error uploading file", error);
@@ -54,8 +53,7 @@ export const StudentDocuments = () => {
     const fetchDocDetails = async () => {
       try {
         const data = await getDocumentsDetails(batch);
-        const { id, ...rest } = data;
-        console.log(rest);
+        const { id, ...rest } = data[0];
         setFiles(rest);
       } catch (error) {
         console.log(error);
@@ -101,21 +99,13 @@ export const StudentDocuments = () => {
         </div>
       )}
       <div className="bg-white min-h-screen justify-center items-center">
-        <div className="bg-cyan-900 text-white py-4">
-          <h1 className="text-3xl font-bold text-center">
-            STUDENT INFORMATION
+        <div className=" text-black py-4 bg-gray-100 shadow-xl">
+          <h1 className="text-3xl font-bold text-center ">
+            STUDENT DOCUMENTS UPLOAD
           </h1>
         </div>
-        <div
-          className="mx-36 p-5 px-16 bg-slate-100"
-          encType="multipart/form-data"
-        >
-          <div className="bg-yellow-200 text-white py-4 text-center my-5 max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-left text-black mx-10">
-              File upload
-            </h1>
-          </div>
-          <div className="max-w-4xl mx-auto flex flex-wrap">
+        <div className="mx-8 p-5 px-16" encType="multipart/form-data">
+          <div className="w-fit mx-auto flex flex-wrap">
             {files &&
               Object.keys(files).map((key) => (
                 <form
@@ -150,9 +140,9 @@ export const StudentDocuments = () => {
                         Document alerady uploaded
                       </p>
 
-                      <div class="group relative cursor-pointer">
+                      <div className="group relative cursor-pointer">
                         <FaCircleInfo />
-                        <span class="tooltip w-48 absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out text-sm bg-gray-800/[0.8] text-white/[0.8] px-2 py-1 rounded-md shadow-md">
+                        <span className="tooltip w-48 absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out text-sm bg-gray-800/[0.8] text-white/[0.8] px-2 py-1 rounded-md shadow-md">
                           Are you sure you want to replace the existing
                           document?
                         </span>
@@ -161,28 +151,27 @@ export const StudentDocuments = () => {
                   )}
                 </form>
               ))}
-            <div className="grid md:grid-cols-2 md:gap-10 px-10">
-              <div>
-                <div className="flex justify-between mb-1 mt-7 w-2/3">
-                  <span className="text-base font-medium text-black">
-                    Progress
-                  </span>
-                  <span className="text-sm font-medium text-black">1 of 2</span>
-                </div>
-                <div className="w-2/3 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                  <div
-                    className="bg-green-400 h-2.5 rounded-full"
-                    style={{ width: "50%" }}
-                  ></div>
-                </div>
+          </div>
+          <div className="flex w-full px-10">
+            <div>
+              <div className="flex justify-between mb-1 mt-7 w-full">
+                <span className="text-base font-medium text-black">
+                  Progress
+                </span>
               </div>
-              <button
-                onClick={() => navigate("/thankyou")}
-                className="mt-7 mb-10 ml-56 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm w-24 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                Submit
-              </button>
+              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                <div
+                  className="bg-green-400 h-2.5 rounded-full"
+                  style={{ width: "50%" }}
+                ></div>
+              </div>
             </div>
+            <button
+              onClick={() => navigate("/thankyou")}
+              className="mt-7 mb-10 ml-10 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm w-24 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>

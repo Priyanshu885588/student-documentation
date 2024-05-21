@@ -10,7 +10,7 @@ export const ThankYou = () => {
   };
   return (
     <div className="w-screen h-screen relative flex justify-center items-center overflow-hidden homepage-bg-light">
-      <div className="absolute z-10 w-96 bg-opacity-60 bg-black border-2 border-blue-400 shadow-lg backdrop-blur-md text-white rounded-lg p-8">
+      <div className="absolute z-10 w-96 bg-opacity-60 bg-black border-2 border-blue-400 shadow-lg backdrop-blur-xl text-white rounded-lg p-8">
         <h1 className="text-3xl text-center mb-5 mt-11 ">
           Upload Successful !!
         </h1>
@@ -25,7 +25,7 @@ export const ThankYou = () => {
           )}
         </div>
         <h2 className="text-xl text-center mb-5 ">
-          Your details have be Successful uploaded.
+          Your details have been successfully uploaded.
         </h2>
 
         <div className="grid place-items-center h-full  ">

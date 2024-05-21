@@ -38,15 +38,13 @@ const getStudentData = async (req, res) => {
       .promise()
       .query(`SELECT count(*) FROM student_${batch} WHERE status = 1`);
     const { ["count(*)"]: statusCount } = response[0][0];
-    res
-      .status(200)
-      .json({
-        rows,
-        length: rows.length,
-        pagesCount: pagesCount,
-        countValue: countValue,
-        statusCount: statusCount,
-      });
+    res.status(200).json({
+      rows,
+      length: rows.length,
+      pagesCount: pagesCount,
+      countValue: countValue,
+      statusCount: statusCount,
+    });
   } catch (error) {
     console.error("Error executing the query:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -238,33 +236,54 @@ const getStudentDetails = async (req, res) => {
 };
 
 const documentsUpload = async (req, res) => {
-  const key=req.body.key;
-  const colName=req.body.fileName;
-  const {batch}=req.query;
-  
-  const {uniqueid}=req.user;
+  const key = req.body.key;
+  const colName = req.body.fileName;
+  const { batch } = req.query;
+
+  const { uniqueid } = req.user;
   var query;
-  
-  const checkQuery= `SELECT COUNT(*) as count FROM student_${batch}_documents WHERE id = ?`;
-    
-    const [rows] = await db.promise().query(checkQuery, [uniqueid]);
-    const count = rows[0].count;
-  
-  if(count>0)
-    {
-      query=`UPDATE student_${batch}_documents SET ${colName}="${key}" WHERE id=? `;
-    }
-    else{
-      query=`INSERT INTO student_${batch}_documents(id,${colName}) values("${uniqueid}","${key}")`;
+
+  try {
+    const checkQuery = `SELECT COUNT(*) as count FROM student_${batch}_documents WHERE id = ?`;
+
+    const [rows1] = await db.promise().query(checkQuery, [uniqueid]);
+    const count = rows1[0].count;
+
+    if (count > 0) {
+      query = `UPDATE student_${batch}_documents SET ${colName}="${key}" WHERE id=? `;
+    } else {
+      query = `INSERT INTO student_${batch}_documents(id,${colName}) values("${uniqueid}","${key}")`;
     }
 
-  try{
-    await db.promise().query(query,[uniqueid]);
+    await db.promise().query(query, [uniqueid]);
+    const [rows] = await db
+      .promise()
+      .query(`SELECT * FROM student_${batch}_documents WHERE id = ?`, [
+        uniqueid,
+      ]);
+
+    if (rows.length === 0) {
+      console.log("No row found with the given id.");
+    } else {
+      const row = rows[0];
+      let allColumnsFilled = true;
+      // Check if any column in the row is NULL
+      for (const column in row) {
+        if (row[column] === null) {
+          allColumnsFilled = false;
+          break;
+        }
+      }
+
+      if (allColumnsFilled) {
+        await db
+          .promise()
+          .query(`UPDATE student_${batch} SET status=1 WHERE id=?`, [uniqueid]);
+      }
+    }
 
     res.status(200).json({ msg: "document key uploaded successfully!!!" });
-
-  }
-  catch(error){
+  } catch (error) {
     res.status(400).json({ msg: "something went wrong", error });
   }
 };
@@ -296,13 +315,31 @@ const getStudentDocuments = async (req, res) => {
   const { batch } = req.query;
 
   try {
-    const data = await db
+    const [rows] = await db
       .promise()
-      .query(`select * from student_${batch}_documents where id = ?`, [
+      .query(`SELECT * FROM student_${batch}_documents WHERE id = ?`, [
         uniqueid,
       ]);
-    const studentdocuments = data[0][0];
-    res.status(200).json(studentdocuments);
+
+    if (rows.length === 0) {
+      // Insert a new record with the given id
+      await db
+        .promise()
+        .query(`INSERT INTO student_${batch}_documents (id) VALUES (?)`, [
+          uniqueid,
+        ]);
+
+      // Execute the select query again
+      const [newRows] = await db
+        .promise()
+        .query(`SELECT * FROM student_${batch}_documents WHERE id = ?`, [
+          uniqueid,
+        ]);
+    } else {
+      // Use the existing rows for further processing
+      // console.log(rows);
+    }
+    res.status(200).json(rows);
   } catch (error) {
     res.status(400).json({ msg: "Something went wrong...", error });
   }

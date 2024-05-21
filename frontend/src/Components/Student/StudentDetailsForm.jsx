@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { studentDetailsSchema } from "./Schemas";
 import { getStudentDetails, studentDetailsUpload } from "./Services/Services";
 import { useParams } from "react-router-dom";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const StudentDetailsForm = () => {
   const { batch } = useParams();
@@ -88,12 +89,16 @@ const StudentDetailsForm = () => {
   }, []);
 
   if (loading) {
-    return <div>loading....</div>;
+    return (
+      <div className="min-h-screen fixed top-0 z-50 bg-black/[0.9] text-white w-screen flex justify-center items-center">
+        <AiOutlineLoading3Quarters className="animate-spin w-6 h-6" />
+      </div>
+    );
   }
 
   return (
     <div className="bg-white">
-      <div className="bg-cyan-900 text-white py-4">
+      <div className="bg-gray-100 text-black shadow-xl py-4">
         <h1 className="text-3xl font-bold text-center">STUDENT INFORMATION</h1>
       </div>
 
