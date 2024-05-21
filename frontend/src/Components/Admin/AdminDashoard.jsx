@@ -32,7 +32,16 @@ export const AdminDashboard = () => {
   const [addNewDocumentField, setAddNewDocumentField] = useState(false);
   const [inputNewDocument, setInputNewDocument] = useState("");
   const [documentColumns, setDocumentColumns] = useState([]);
+  const [selectedValue, setSelectedValue] = useState('ALL');
+  const [selectedstatus,setselectedstatus]=useState('ALL');
 
+  const handelstatus=(event)=>{
+    setselectedstatus(event.target.value);
+  };
+  // Handle changes to the select element
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
   const navigate = useNavigate();
 
   const fetchData = async (batchData, currentPage) => {
@@ -316,13 +325,15 @@ export const AdminDashboard = () => {
                         Admission Category :
                         <select
                           className=" ml-3 p-1 border border-gray-400 rounded mt-1"
-                          value="ALL"
+                          value={selectedValue}
                           readOnly
+                          onChange={handleChange}
                         >
                           <option value="ALL">ALL</option>
-                          <option>CET</option>
-                          <option>COMEDK</option>
-                          <option>MQ</option>
+                          <option value="cet" >CET</option>
+                          <option value="comedk" >COMEDK</option>
+                          <option value="mq" >MQ</option>
+                          <option value="cet(snq)">CET(SNQ)</option>
                         </select>
                       </th>
                       <th className="py-4 px-4">
@@ -330,18 +341,23 @@ export const AdminDashboard = () => {
                         <select
                           className=" ml-3 p-1 border border-gray-400 rounded mt-1"
                           readOnly
-                          value="All"
+                          value={selectedstatus}
+                          onChange={handelstatus}
                         >
                           <option value="ALL">ALL</option>
-                          <option> DONE</option>
-                          <option>PENDING</option>
+                          <option value="true" > DONE</option>
+                          <option value="false" >PENDING</option>
                         </select>
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {studentData.map((student, index) => (
-                      <tr
+                  {studentData
+                   .filter(student => selectedValue === "ALL" || student.admission_category.toLowerCase() === selectedValue.toLowerCase())
+                   .filter(student => selectedstatus === "ALL"? selectedstatus :selectedstatus === "true" ? student.status.data[0] : !student.status.data[0] )
+                   
+                   .map((student, index) => (
+                  <tr
                         key={student.id}
                         className="text-center border-b border-gray-30 hover:bg-slate-100 cursor-pointer"
                         onClick={() => setId(student.id)}
@@ -349,8 +365,7 @@ export const AdminDashboard = () => {
                         <td className="py-2 px-4">{student.insertion_order}</td>
                         <td className="py-2 px-4 mono">{student.id}</td>
                         <td className="py-2 px-4">{student.name}</td>
-                        <td className="py-2 px-4">
-                          {student.admission_category}
+                        <td className="py-2 px-4">{student.admission_category}
                         </td>
                         {student.status.data[0] ? (
                           <td className="py-2 px-4 flex justify-center items-center gap-2">
