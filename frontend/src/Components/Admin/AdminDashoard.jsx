@@ -32,10 +32,11 @@ export const AdminDashboard = () => {
   const [addNewDocumentField, setAddNewDocumentField] = useState(false);
   const [inputNewDocument, setInputNewDocument] = useState("");
   const [documentColumns, setDocumentColumns] = useState([]);
-  const [selectedValue, setSelectedValue] = useState('ALL');
-  const [selectedstatus,setselectedstatus]=useState('ALL');
+  const [selectedValue, setSelectedValue] = useState("ALL");
+  const [selectedstatus, setselectedstatus] = useState("ALL");
+  const [category, setCategory] = useState([]);
 
-  const handelstatus=(event)=>{
+  const handelstatus = (event) => {
     setselectedstatus(event.target.value);
   };
   // Handle changes to the select element
@@ -51,8 +52,10 @@ export const AdminDashboard = () => {
         batch: batchData,
         page: currentPage,
       });
+
       setPage(currentPage - 1);
       setStudentData(data.rows);
+      setCategory(data.category);
       setpagecount(data.pagesCount);
       setStudentCount({
         totalStudents: data.countValue,
@@ -330,10 +333,13 @@ export const AdminDashboard = () => {
                           onChange={handleChange}
                         >
                           <option value="ALL">ALL</option>
-                          <option value="cet" >CET</option>
-                          <option value="comedk" >COMEDK</option>
-                          <option value="mq" >MQ</option>
-                          <option value="cet(snq)">CET(SNQ)</option>
+                          {category.map((cat) => (
+                            <>
+                              <option value={cat.admission_category}>
+                                {cat.admission_category}
+                              </option>
+                            </>
+                          ))}
                         </select>
                       </th>
                       <th className="py-4 px-4">
@@ -345,47 +351,61 @@ export const AdminDashboard = () => {
                           onChange={handelstatus}
                         >
                           <option value="ALL">ALL</option>
-                          <option value="true" > DONE</option>
-                          <option value="false" >PENDING</option>
+                          <option value="true"> DONE</option>
+                          <option value="false">PENDING</option>
                         </select>
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                  {studentData
-                   .filter(student => selectedValue === "ALL" || student.admission_category.toLowerCase() === selectedValue.toLowerCase())
-                   .filter(student => selectedstatus === "ALL"? selectedstatus :selectedstatus === "true" ? student.status.data[0] : !student.status.data[0] )
-                   
-                   .map((student, index) => (
-                  <tr
-                        key={student.id}
-                        className="text-center border-b border-gray-30 hover:bg-slate-100 cursor-pointer"
-                        onClick={() => setId(student.id)}
-                      >
-                        <td className="py-2 px-4">{student.insertion_order}</td>
-                        <td className="py-2 px-4 mono">{student.id}</td>
-                        <td className="py-2 px-4">{student.name}</td>
-                        <td className="py-2 px-4">{student.admission_category}
-                        </td>
-                        {student.status.data[0] ? (
-                          <td className="py-2 px-4 flex justify-center items-center gap-2">
-                            <span className="relative flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </span>
-                            Done
+                    {studentData
+                      .filter(
+                        (student) =>
+                          selectedValue === "ALL" ||
+                          student.admission_category.toLowerCase() ===
+                            selectedValue.toLowerCase()
+                      )
+                      .filter((student) =>
+                        selectedstatus === "ALL"
+                          ? selectedstatus
+                          : selectedstatus === "true"
+                          ? student.status.data[0]
+                          : !student.status.data[0]
+                      )
+
+                      .map((student, index) => (
+                        <tr
+                          key={student.id}
+                          className="text-center border-b border-gray-30 hover:bg-slate-100 cursor-pointer"
+                          onClick={() => setId(student.id)}
+                        >
+                          <td className="py-2 px-4">
+                            {student.insertion_order}
                           </td>
-                        ) : (
-                          <td className="py-2 px-4 flex justify-center items-center gap-2">
-                            <span className="relative flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                            </span>
-                            Pending
+                          <td className="py-2 px-4 mono">{student.id}</td>
+                          <td className="py-2 px-4">{student.name}</td>
+                          <td className="py-2 px-4">
+                            {student.admission_category}
                           </td>
-                        )}
-                      </tr>
-                    ))}
+                          {student.status.data[0] ? (
+                            <td className="py-2 px-4 flex justify-center items-center gap-2">
+                              <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                              </span>
+                              Done
+                            </td>
+                          ) : (
+                            <td className="py-2 px-4 flex justify-center items-center gap-2">
+                              <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                              </span>
+                              Pending
+                            </td>
+                          )}
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>

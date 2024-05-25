@@ -8,7 +8,11 @@ const studentRoutes = require("./routes/studentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const documentRoutes = require("./routes/documentRoutes");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -16,7 +20,7 @@ app.use(cookieParser());
 app.use("/api/v1/admin/upload", uploadRoutes);
 app.use("/api/v1/admin/", adminRoutes);
 app.use("/api/v1/", studentRoutes);
-app.use("/api/v1/document",documentRoutes);
+app.use("/api/v1/document", documentRoutes);
 
 app.get("/", (req, res) => {
   console.log("Reached the root route");

@@ -38,12 +38,19 @@ const getStudentData = async (req, res) => {
       .promise()
       .query(`SELECT count(*) FROM student_${batch} WHERE status = 1`);
     const { ["count(*)"]: statusCount } = response[0][0];
+
+    const response1 = await db
+      .promise()
+      .query(
+        `select admission_category from student_${batch} group by admission_category;`
+      );
     res.status(200).json({
       rows,
       length: rows.length,
       pagesCount: pagesCount,
       countValue: countValue,
       statusCount: statusCount,
+      category: response1[0],
     });
   } catch (error) {
     console.error("Error executing the query:", error);
