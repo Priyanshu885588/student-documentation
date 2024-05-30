@@ -6,7 +6,7 @@ const exceljs = require("exceljs");
 const studentModel = require("../models/student");
 
 const uploadExcel = (req, res) => {
-  console.log("Reached uploadExcel function");
+  console.log("Reached uploadExcel function",req.body.batch);
   if (!req.file || !req.body.batch) {
     return res
       .status(400)
@@ -24,13 +24,18 @@ const uploadExcel = (req, res) => {
     const worksheet = workbook.getWorksheet(1);
 
     // Iterate through rows starting from the second row
+    console.log("row count =",worksheet.rowCount);
     for (let i = 2; i <= worksheet.rowCount; i++) {
       const row = worksheet.getRow(i);
+      if(isEmptyRow(row)) {
+        continue;
+      }
       const name = row.getCell("B").text?.toString().trim(); // Assuming name is in column B
       const admissionCategory = row.getCell("C").text?.toString().trim(); // Assuming admission category is in column C
+      const Email = row.getCell("D").text?.toString(); // Assuming Email is in column D
 
       // Insert data into the corresponding table based on the batch
-      studentModel.insertStudent(batch, name, admissionCategory);
+      studentModel.insertStudent(batch, name, admissionCategory, Email);
       
     }
     studentModel.createStudentDetailsTable(batch);
@@ -40,6 +45,10 @@ const uploadExcel = (req, res) => {
   });
 };
 
+
+const isEmptyRow = (row) => {
+  return row.values.slice(1).every(cell => !cell || cell.toString().trim() === '');
+};
 
 
 

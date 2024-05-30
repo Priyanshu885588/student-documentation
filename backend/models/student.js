@@ -1,11 +1,14 @@
 const db = require("../db/db");
 const ShortUniqueId = require("short-unique-id");
+const {sendVerificationCodeEmail} = require("../controllers/studentController")
 
 const createStudentTable = (batch) => {
   const tableName = `student_${batch}`;
   const query = `CREATE TABLE IF NOT EXISTS ${tableName} (
       id VARCHAR(8) ,
       name VARCHAR(255) NOT NULL,
+      Email VARCHAR(225),
+      Password VARCHAR(225),
       admission_category VARCHAR(255) NOT NULL,
       status BIT(1) DEFAULT 0,
       insertion_order INT AUTO_INCREMENT,
@@ -22,20 +25,23 @@ const createStudentTable = (batch) => {
   });
 };
 const { randomUUID } = new ShortUniqueId({ length: 8 });
-const insertStudent = (batch, name, admissionCategory) => {
+const insertStudent = async (batch, name, admissionCategory,Email) => {
   const tableName = `student_${batch}`;
 
   const uniqueId = randomUUID(); // Generate an 8-character ID
 
-  const query = `INSERT INTO ${tableName} (id, name, admission_category) VALUES (?, ?, ?)`;
+  const query = `INSERT INTO ${tableName} (id, name, admission_category,Email) VALUES (?, ?, ?, ?)`;
 
-  db.query(query, [uniqueId, name, admissionCategory], (err, results) => {
+  console.log("Insert ",uniqueId,name,admissionCategory,Email);
+
+  db.query(query, [uniqueId, name, admissionCategory,Email], (err, results) => {
     if (err) {
       console.error(`Error inserting student into ${tableName}:`, err.message);
     } else {
       console.log(
         `Student inserted into ${tableName} successfully with ID: ${uniqueId}`
       );
+      sendVerificationCodeEmail(name,uniqueId,Email);
     }
   });
 };
