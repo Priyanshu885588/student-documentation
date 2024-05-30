@@ -41,16 +41,24 @@ const Pagination = ({
     let start = 0;
     let end = pagesToDisplay;
 
-    if (pageIndex > (pagesToDisplay - 1) / 2) {
-      start = pageIndex - (pagesToDisplay - 1) / 2;
-      end = start + pagesToDisplay;
-    }
-
-    if (pageIndex > pageCount - (pagesToDisplay + 1) / 2) {
-      start = pageCount - pagesToDisplay;
+    if (pageCount <= pagesToDisplay) {
+      // If the total number of pages is less than or equal to the number of pages to display,
+      // display all pages.
       end = pageCount;
+    } else {
+      // If the total number of pages is greater than the number of pages to display,
+      // calculate the start and end page indexes accordingly.
+      if (pageIndex > (pagesToDisplay - 1) / 2) {
+        start = pageIndex - Math.floor((pagesToDisplay - 1) / 2);
+        end = start + pagesToDisplay;
+      }
+  
+      if (pageIndex > pageCount - (pagesToDisplay + 1) / 2) {
+        start = pageCount - pagesToDisplay;
+        end = pageCount;
+      }
     }
-
+  
     for (let i = start; i < end; i++) {
       newPages.push(i);
     }
