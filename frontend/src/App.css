@@ -107,22 +107,6 @@ body {
   }
 }
 
-.login_box {
-  position: absolute;
-  z-index: 10;
-  width: 384px;
-  background: rgba(0, 0, 0, 0.642);
-  border: 2px solid;
-  border-color: lightskyblue;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(40px);
-  color: #fff;
-  border-radius: 1rem;
-  padding: 2rem;
-
-  /* animation: loginbox 2s; */
-}
 /* @keyframes loginbox {
   0% {
     opacity: 0;

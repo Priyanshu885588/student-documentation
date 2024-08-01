@@ -21,7 +21,7 @@ export const Login = () => {
     try {
       const data = await studentLogin({ uniqueid, name: username }, batch);
       localStorage.setItem("studentToken", data.token);
-      navigate(`/detailsForm/${batch}`);
+      navigate();
     } catch (error) {
       if (error.response) {
         console.log(error.response.data);
@@ -66,42 +66,42 @@ export const Login = () => {
   }, []);
 
   return (
-    <div className="login_box">
+    <div className="w-[30%] bg-gray-50/[.2] backdrop-blur-xl montserrat p-8 rounded-3xl shadow-lg shadow-white/[0.2]">
       <form onSubmit={handleStudentLogin}>
-        <h1 className="text-3xl text-center">Login</h1>
+        <h1 className="text-3xl text-center text-white">Login</h1>
         <div className="relative w-full h-16 my-8">
           <input
             type="text"
-            className="w-full h-full  bg-transparent border-2 border-yellow-500 outline-none rounded-full text-white text-base px-5 py-5 placeholder:text-white "
+            className="w-full h-full  bg-transparent border-b outline-none text-white text-base px-2 placeholder:text-white "
             id="username"
             placeholder="Username"
             onChange={(e) => setusername(e.target.value.trim())}
             required
           />
-          <HiOutlineUserCircle className="absolute right-[20px] top-1/2 transform -translate-y-1/2 text-base" />
+          <HiOutlineUserCircle className="absolute right-[20px] top-1/2 transform -translate-y-1/2 w-5 h-5 text-white" />
         </div>
         <div className="relative w-full h-16 my-8">
           <input
             type="text"
-            className="w-full h-full bg-transparent border-2 border-yellow-500 outline-none rounded-full text-white text-base px-5 py-5 placeholder:text-white"
+            className="w-full h-full bg-transparent outline-none border-b text-white text-base px-2  placeholder:text-white"
             id="Unique ID"
             placeholder="Unique ID"
             onChange={(e) => setUniqueid(e.target.value.trim())}
             required
           />
-          <FaRegAddressCard className="absolute right-[20px] top-1/2 transform -translate-y-1/2 text-base" />
+          <FaRegAddressCard className="absolute right-[20px] top-1/2 transform -translate-y-1/2 w-5 h-5 text-white" />
         </div>
         <div className="relative w-full h-16 my-8">
           <select
             onChange={handleBatchChange}
             value={batch}
             required
-            className="w-full h-full bg-transparent border-2 border-yellow-500 outline-none rounded-full text-white text-base px-5 py-5 placeholder:text-white"
+            className="w-full h-full bg-transparent   outline-none border-b text-white text-base px-2  placeholder:text-white"
           >
             {batches &&
               batches.batches.map((batch) => (
                 <option
-                  className="cursor-pointer uppercase text-black"
+                  className="cursor-pointer uppercase text-white"
                   key={batch}
                   value={batch}
                 >
@@ -109,11 +109,11 @@ export const Login = () => {
                 </option>
               ))}
           </select>
-          <MdDateRange className="absolute right-[20px] top-1/2 transform -translate-y-1/2 text-base" />
+          <MdDateRange className="absolute right-[20px] top-1/2 transform -translate-y-1/2 w-5 h-5 text-white" />
         </div>
         <button
           type="submit"
-          className="w-full h-12 bg-white text-black border-2 outline-none rounded-full shadow-sm cursor-pointer text-base font-semibold transition duration-300 ease-in-out hover:bg-transparent hover:text-white"
+          className="w-full h-12 bg-white text-black  outline-none rounded-full shadow-sm cursor-pointer text-base font-semibold transition duration-300 ease-in-out hover:bg-white/[0.5] hover:scale-95"
         >
           Login
         </button>

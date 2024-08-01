@@ -44,7 +44,6 @@ export const AdminDashboard = () => {
     setSelectedValue(event.target.value);
   };
   const navigate = useNavigate();
-
   const fetchData = async (batchData, currentPage) => {
     try {
       setIsLoading(true);
@@ -52,7 +51,7 @@ export const AdminDashboard = () => {
         batch: batchData,
         page: currentPage,
       });
-
+      console.log(data);
       setPage(currentPage - 1);
       setStudentData(data.rows);
       setCategory(data.category);
