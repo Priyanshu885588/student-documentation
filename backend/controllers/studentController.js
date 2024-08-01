@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const nodemailer = require("nodemailer");
 
 const getAllBatches = async (req, res) => {
   try {
@@ -352,6 +353,129 @@ const getStudentDocuments = async (req, res) => {
   }
 };
 
+
+
+const sendVerificationCodeEmail = async (username, verificationCode, Email) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.SECRET_EMAIL, // Your Gmail address
+      pass: process.env.SECRET_PASS, // Your Gmail password or an app-specific password
+    },
+  });
+
+  const mailSuperAdmin = {
+    from: process.env.SECRET_EMAIL,
+    to: Email,
+    subject: "Verification Code for Registration",
+    html: `
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: grey;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Make body fill entire viewport height */
+    }
+    .container {
+      max-width: 600px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: left; /* Align content within container to left */
+    }
+    h1, h4, p {
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #333333;
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+    h4 {
+      color: #4CAF50;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    p {
+      color: #555555;
+      font-size: 18px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+    .code {
+      display: flex;
+      justify-content: center;
+    }
+    .digit {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 24px;
+      margin: 0 5px;
+      width: 10px;
+      text-align: center;
+    }
+    .footer {
+      font-style: italic;
+      color: #888888;
+      margin-top: 20px;
+    }
+    .logo {
+      max-width: 100px;
+      margin-bottom: 20px;
+    }
+    .timer {
+      font-size: 20px;
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <img src="https://www.rnsit.ac.in/wp-content/themes/rnsit/webp/logo.webp" alt="College Logo" class="logo">
+      <h1>Hello,</h1>
+      <p><strong>${username}</strong> Requested verification code for admin registration in student documentation upload website ~RNSIT</p>
+      <p>To approve their request, please use the verification code below:</p>
+      <div class="code">
+        <span class="digit">${String(verificationCode).charAt(0)}</span>
+        <span class="digit">${String(verificationCode).charAt(1)}</span>
+        <span class="digit">${String(verificationCode).charAt(2)}</span>
+        <span class="digit">${String(verificationCode).charAt(3)}</span>
+        <span class="digit">${String(verificationCode).charAt(4)}</span>
+        <span class="digit">${String(verificationCode).charAt(5)}</span>
+      </div>
+      <p class="footer">For verification purposes only for the student documentation upload <br> Thank You</p>
+    </div>
+  </div>
+</body>
+</html>
+
+  `,
+  };
+
+  try {
+    await transporter.sendMail(mailSuperAdmin);
+    console.log(`Verification code sent`);
+  } catch (error) {
+    console.error("Email sending error:", error);
+    throw new Error("Failed to send verification code to email.");
+  }
+};
+
 module.exports = {
   getStudentData,
   getAllBatches,
@@ -363,4 +487,5 @@ module.exports = {
   get_student_data,
   getStudentDocuments,
   get_student_data,
+  sendVerificationCodeEmail,
 };
