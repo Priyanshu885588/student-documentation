@@ -41,7 +41,7 @@ const insertStudent = async (batch, name, admissionCategory,Email) => {
       console.log(
         `Student inserted into ${tableName} successfully with ID: ${uniqueId}`
       );
-      sendVerificationCodeEmail(name,uniqueId,Email);
+      //sendVerificationCodeEmail(name,uniqueId,Email);
     }
   });
 };

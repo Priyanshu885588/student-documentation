@@ -21,7 +21,7 @@ export const Login = () => {
     try {
       const data = await studentLogin({ uniqueid, name: username }, batch);
       localStorage.setItem("studentToken", data.token);
-      navigate();
+      navigate(`/detailsForm/${batch}`);
     } catch (error) {
       if (error.response) {
         console.log(error.response.data);
