@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { documentsUpload } from "./Services/Services";
+import { analysisofFile, documentsUpload } from "./Services/Services";
 import { getDocumentURL } from "./Services/Services";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -16,12 +16,15 @@ export const StudentDocuments = () => {
   const navigate = useNavigate();
   const [files, setFiles] = useState(null);
   const [currentFile, setCurrentFIle] = useState();
+  const [fileanalysis, setFileanalysis] = useState("");
+
   const [docLoading, setDocLoading] = useState(false);
   const submitHandler = async (e) => {
     setDocLoading(true);
     e.preventDefault();
     const formData = new FormData(e.target);
     const file = formData.get("file");
+    const formElements = e.target.elements;
 
     if (!file) {
       console.error("No file selected");
@@ -41,6 +44,14 @@ export const StudentDocuments = () => {
         { key: data.path, fileName: currentFile },
         batch
       );
+      for (let element of formElements) {
+        if (element.type === "file") {
+          if (element.id == "6th_sem_marks") {
+          }
+        }
+      }
+
+      const re = await analysisofFile(batch);
       toast.success("File uploaded successfully");
     } catch (error) {
       console.error("Error uploading file", error);
@@ -66,7 +77,6 @@ export const StudentDocuments = () => {
     localStorage.removeItem("studentToken");
     navigate("/");
   };
-   
 
   return (
     <>

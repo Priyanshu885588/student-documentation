@@ -56,17 +56,27 @@ export const SingleStudentDetails = ({ id, batch, handleSingleStudent }) => {
           </div>
         </div>
       ) : (
-        <div class="max-w-sm p-6 mt-32 flex justify-center flex-col item-center bg-slate-200 text-centers border border-gray-200 rounded-lg shadow">
-          <h5 class="mb-2 text-center text-2xl font-bold tracking-tight text-black quicksand">
-            NO DATA
-          </h5>
+        <div class=" p-6 mt-32 flex justify-center flex-col item-center bg-slate-200 text-centers border border-gray-200 rounded-lg shadow">
           <button
             type="button"
             onClick={handleSingleStudent}
-            className="back-button m-5 flex items-center justify-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md shadow-md transition duration-300 ease-in-out"
+            className="w-fit back-button m-5 flex items-center justify-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md shadow-md transition duration-300 ease-in-out"
           >
             <IoMdArrowBack />
             Back
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              window.open(
+                `http://localhost:5173/register?userid=${id}&batch=${batch}`,
+                "_blank"
+              )
+            }
+            className="back-button m-5 flex items-center justify-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md shadow-md transition duration-300 ease-in-out"
+          >
+            <IoMdArrowBack className="mr-2" />
+            Click here to register your face for authentication
           </button>
         </div>
       )}

@@ -60,9 +60,9 @@ const getStudentData = async (req, res) => {
 };
 
 const studentAuth = async (req, res) => {
-  const { uniqueid, name } = req.body;
+  const { uniqueid } = req.body;
   const batch = req.query;
-  if (!uniqueid || !name) {
+  if (!uniqueid) {
     return res.status(400).json({
       msg: "Enter unique id and student name",
     });
@@ -70,12 +70,9 @@ const studentAuth = async (req, res) => {
   try {
     const data = await db
       .promise()
-      .query(`SELECT * FROM student_${batch.batch} WHERE id = ? AND name = ?`, [
-        uniqueid,
-        name,
-      ]);
+      .query(`SELECT * FROM student_${batch.batch} WHERE id = ? `, [uniqueid]);
     if (data[0].length > 0) {
-      const token = jwt.sign({ uniqueid, name }, process.env.JWT_SECRET);
+      const token = jwt.sign({ uniqueid }, process.env.JWT_SECRET);
 
       return res
         .status(200)
@@ -352,8 +349,6 @@ const getStudentDocuments = async (req, res) => {
     res.status(400).json({ msg: "Something went wrong...", error });
   }
 };
-
-
 
 const sendVerificationCodeEmail = async (username, verificationCode, Email) => {
   const transporter = nodemailer.createTransport({

@@ -7,6 +7,7 @@ const uploadRoutes = require("./routes/uploadRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const documentRoutes = require("./routes/documentRoutes");
+const connectDB = require("./db/db2");
 
 app.use(
   cors({
@@ -29,5 +30,6 @@ app.get("/", (req, res) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
+  connectDB(process.env.MONGO_URI);
   console.log(`Server is running at ${port}`);
 });

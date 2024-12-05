@@ -19,9 +19,9 @@ export const Login = () => {
   const handleStudentLogin = async (e) => {
     e.preventDefault();
     try {
-      const data = await studentLogin({ uniqueid, name: username }, batch);
-      localStorage.setItem("studentToken", data.token);
-      navigate(`/detailsForm/${batch}`);
+      window.open(
+        `http://localhost:5173/login?userid=${uniqueid}&batch=${batch}`
+      );
     } catch (error) {
       if (error.response) {
         console.log(error.response.data);

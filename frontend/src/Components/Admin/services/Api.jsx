@@ -3,6 +3,7 @@ import axios from "axios";
 // const baseURL = "http://34.228.8.172/api/v1/admin";
 // const baseURL = "https://student-documentation.onrender.com/api/v1/admin";
 const baseURL = "http://localhost:3000/api/v1/admin";
+const url = "http://localhost:3000/api/v1/document";
 
 const fetchStudentData = async (data) => {
   try {
@@ -142,6 +143,16 @@ const getDocumentColumns = async (batch) => {
   }
 };
 
+const getanalyzeddata = async () => {
+  try {
+    const response = await axios.get(`${url}/getanalyzedata`);
+    return response.data;
+  } catch (error) {
+    console.error("Error ", error);
+    throw error;
+  }
+};
+
 export {
   fetchStudentData,
   uploadFile,
@@ -155,4 +166,5 @@ export {
   deleteStudentData,
   addDocumentColumn,
   getDocumentColumns,
+  getanalyzeddata,
 };

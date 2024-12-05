@@ -120,6 +120,36 @@ const uploadDocument = async (url, file) => {
     throw error;
   }
 };
+
+const uploadFile = (file, fileId) => {
+  const formData = new FormData();
+  formData.append(fileId, file);
+
+  return axios.post(`${baseURL}/document/upload`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+const analysisofFile = async (batch) => {
+  const token = localStorage.getItem("studentToken");
+  const config = {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = await axios.get(
+      `${baseURL}/document/pdf?batch=${batch}`,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export {
   studentLogin,
   studentDetailsUpload,
@@ -129,4 +159,6 @@ export {
   getDocumentsList,
   getDocumentURL,
   uploadDocument,
+  uploadFile,
+  analysisofFile,
 };
