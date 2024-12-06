@@ -78,10 +78,11 @@ const getPDFFromS3 = async (req, res) => {
     // console.log("Gemini Analysis Result:", JSON.parse(result));
 
     // Send response with the result
-    const result1 = await analysis.create({
-      userId: uniqueid,
-      analysedinfo: result,
-    });
+    const result1 = await analysis.findOneAndUpdate(
+      { userId: uniqueid }, // Filter to find the document by userId
+      { analysedinfo: result }, // Update the analysedinfo field
+      { upsert: true, new: true } // Create if not exists (upsert) and return the updated document (new)
+    );
 
     res.status(200).json({
       message: "PDF processed successfully",

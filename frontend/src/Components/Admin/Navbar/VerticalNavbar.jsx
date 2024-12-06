@@ -6,6 +6,7 @@ import { FaChartPie } from "react-icons/fa";
 import { FaUpload } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { IoLogOutSharp } from "react-icons/io5";
+import { GoGraph } from "react-icons/go";
 export const VerticalNavbar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
@@ -68,6 +69,16 @@ export const VerticalNavbar = () => {
               >
                 <FaUpload />
                 <span className="ms-3">Upload</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/admin/graphs"
+                className="flex items-center p-2 text-gray-100 rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group"
+                onClick={toggleDrawer}
+              >
+                <GoGraph />
+                <span className="ms-3">Graph</span>
               </Link>
             </li>
             <li>

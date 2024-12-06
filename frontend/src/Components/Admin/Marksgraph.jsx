@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { getanalyzeddata } from "./services/Api";
+import { VerticalNavbar } from "./Navbar/VerticalNavbar";
 
 const MarksGraph = () => {
   const [chartData, setChartData] = useState(null);
@@ -102,58 +103,66 @@ const MarksGraph = () => {
   if (!chartData) return null;
 
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-2xl font-semibold text-center mb-6">Marks Trends</h2>
+    <>
+      <VerticalNavbar />
+      <div className="container mx-auto p-6">
+        <h2 className="text-2xl font-semibold text-center mb-6">
+          Marks Trends
+        </h2>
 
-      <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
-        <h4 className="text-sm text-center mb-4">
-          Marks Trend Across Subjects
-        </h4>
-        <div style={{ width: "100%", overflowX: "auto", marginBottom: "20px" }}>
-          <Line
-            data={chartData.lineData}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                x: {
-                  title: {
-                    display: true,
-                    text: "Subjects",
-                  },
-                  ticks: {
-                    font: {
-                      size: 8, // Make the font size smaller
+        <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+          <h4 className="text-sm text-center mb-4">
+            Marks Trend Across Subjects
+          </h4>
+          <div
+            style={{ width: "100%", overflowX: "auto", marginBottom: "20px" }}
+            className="h-[90vh]"
+          >
+            <Line
+              data={chartData.lineData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  x: {
+                    title: {
+                      display: true,
+                      text: "Subjects",
                     },
-                    maxRotation: 45, // Rotate the labels to make them more readable
-                    minRotation: 30, // Minimum rotation angle
-                  },
-                },
-                y: {
-                  title: {
-                    display: true,
-                    text: "Marks",
-                  },
-                  ticks: {
-                    beginAtZero: true,
-                    max: 100, // Limit the max value to 100
-                    stepSize: 10, // Adjust step size for tick marks (optional)
-                    callback: function (value) {
-                      return value <= 100 ? value : null; // Only show ticks up to 100
+                    ticks: {
+                      font: {
+                        size: 8, // Make the font size smaller
+                      },
+                      maxRotation: 45, // Rotate the labels to make them more readable
+                      minRotation: 30, // Minimum rotation angle
                     },
                   },
+                  y: {
+                    title: {
+                      display: true,
+                      text: "Marks",
+                    },
+                    ticks: {
+                      beginAtZero: true,
+                      max: 100, // Limit the max value to 100
+                      stepSize: 10, // Adjust step size for tick marks (optional)
+                      callback: function (value) {
+                        return value <= 100 ? value : null; // Only show ticks up to 100
+                      },
+                    },
+                  },
                 },
-              },
-              plugins: {
-                legend: {
-                  position: "top",
+                plugins: {
+                  legend: {
+                    position: "top",
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
